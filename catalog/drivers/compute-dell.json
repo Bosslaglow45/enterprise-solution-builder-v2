@@ -1,0 +1,270 @@
+{
+  "$schema": "../compute.schema.json",
+  "id": "dell-poweredge",
+  "pillar": "compute",
+  "vendor": "Dell",
+  "driverVersion": "1.0.0",
+  "description": "Dell PowerEdge 16G Server Driver (R660, R760, R760xd2)",
+  "models": [
+    {
+      "modelName": "PowerEdge R660",
+      "formFactor": "1U",
+      "cpuSockets": 2,
+      "supportedCpuArchitectures": [
+        "Intel Xeon 4th Gen (Sapphire Rapids)",
+        "Intel Xeon 5th Gen (Emerald Rapids)"
+      ],
+      "maxMemoryGb": 8192,
+      "memorySlots": 32,
+      "memoryType": "DDR5",
+      "memorySpeedsMtps": [
+        4800,
+        5600
+      ],
+      "maxDimmSizeGb": 256,
+      "driveBays": {
+        "formFactor": "2.5_SFF",
+        "maxSlots": 10,
+        "supportedInterfaces": [
+          "SAS",
+          "SATA",
+          "NVMe"
+        ]
+      },
+      "pcieSlots": 3,
+      "pcieLanesTotal": 64,
+      "pcieSlotDetails": [
+        {
+          "count": 1,
+          "generation": 5,
+          "lanes": 16,
+          "slotFormFactor": "FHHL"
+        },
+        {
+          "count": 2,
+          "generation": 5,
+          "lanes": 16,
+          "slotFormFactor": "LP"
+        }
+      ],
+      "networkOptions": [
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 2,
+          "speedGbps": 25
+        },
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 4,
+          "speedGbps": 25
+        },
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 2,
+          "speedGbps": 100
+        }
+      ],
+      "powerSupplies": {
+        "redundancy": "1+1",
+        "maxPsuCount": 2,
+        "supportedWattages": [
+          800,
+          1100,
+          1400,
+          1800
+        ],
+        "efficiencyRating": "Titanium",
+        "inputVoltage": "AC"
+      },
+      "maxPowerDrawWatts": 1800,
+      "cpuOptions": [
+        {
+          "sku": "Xeon Gold 6448Y",
+          "architecture": "Sapphire Rapids",
+          "coresPerSocket": 32,
+          "threadsPerSocket": 64,
+          "baseClockGhz": 2.1,
+          "maxBoostClockGhz": 4.1,
+          "tdpWatts": 225,
+          "pcieLanesPerSocket": 80,
+          "memoryChannelsPerSocket": 8
+        },
+        {
+          "sku": "Xeon Platinum 8480+",
+          "architecture": "Sapphire Rapids",
+          "coresPerSocket": 56,
+          "threadsPerSocket": 112,
+          "baseClockGhz": 2,
+          "maxBoostClockGhz": 3.8,
+          "tdpWatts": 350,
+          "pcieLanesPerSocket": 80,
+          "memoryChannelsPerSocket": 8
+        }
+      ]
+    },
+    {
+      "modelName": "PowerEdge R760",
+      "formFactor": "2U",
+      "cpuSockets": 2,
+      "supportedCpuArchitectures": [
+        "Intel Xeon 4th Gen (Sapphire Rapids)",
+        "Intel Xeon 5th Gen (Emerald Rapids)"
+      ],
+      "maxMemoryGb": 8192,
+      "memorySlots": 32,
+      "memoryType": "DDR5",
+      "memorySpeedsMtps": [
+        4800,
+        5600
+      ],
+      "maxDimmSizeGb": 256,
+      "driveBays": {
+        "formFactor": "2.5_SFF",
+        "maxSlots": 24,
+        "supportedInterfaces": [
+          "SAS",
+          "SATA",
+          "NVMe"
+        ]
+      },
+      "pcieSlots": 8,
+      "pcieLanesTotal": 128,
+      "pcieSlotDetails": [
+        {
+          "count": 4,
+          "generation": 5,
+          "lanes": 16,
+          "slotFormFactor": "FHFL"
+        },
+        {
+          "count": 4,
+          "generation": 5,
+          "lanes": 8,
+          "slotFormFactor": "LP"
+        }
+      ],
+      "networkOptions": [
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 2,
+          "speedGbps": 25
+        },
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 2,
+          "speedGbps": 100
+        }
+      ],
+      "powerSupplies": {
+        "redundancy": "1+1",
+        "maxPsuCount": 2,
+        "supportedWattages": [
+          1100,
+          1400,
+          1800,
+          2400,
+          2800
+        ],
+        "efficiencyRating": "Titanium",
+        "inputVoltage": "AC"
+      },
+      "maxPowerDrawWatts": 2800,
+      "cpuOptions": [
+        {
+          "sku": "Xeon Gold 6448Y",
+          "architecture": "Sapphire Rapids",
+          "coresPerSocket": 32,
+          "threadsPerSocket": 64,
+          "baseClockGhz": 2.1,
+          "maxBoostClockGhz": 4.1,
+          "tdpWatts": 225,
+          "pcieLanesPerSocket": 80,
+          "memoryChannelsPerSocket": 8
+        },
+        {
+          "sku": "Xeon Platinum 8592+",
+          "architecture": "Emerald Rapids",
+          "coresPerSocket": 64,
+          "threadsPerSocket": 128,
+          "baseClockGhz": 1.9,
+          "maxBoostClockGhz": 3.9,
+          "tdpWatts": 350,
+          "pcieLanesPerSocket": 80,
+          "memoryChannelsPerSocket": 8
+        }
+      ]
+    },
+    {
+      "modelName": "PowerEdge R760xd2",
+      "formFactor": "2U",
+      "cpuSockets": 2,
+      "supportedCpuArchitectures": [
+        "Intel Xeon 4th Gen",
+        "Intel Xeon 5th Gen"
+      ],
+      "maxMemoryGb": 2048,
+      "memorySlots": 16,
+      "memoryType": "DDR5",
+      "memorySpeedsMtps": [
+        4800
+      ],
+      "maxDimmSizeGb": 128,
+      "driveBays": {
+        "formFactor": "3.5_LFF",
+        "maxSlots": 28,
+        "supportedInterfaces": [
+          "SAS",
+          "SATA"
+        ]
+      },
+      "pcieSlots": 5,
+      "pcieLanesTotal": 64,
+      "pcieSlotDetails": [
+        {
+          "count": 2,
+          "generation": 4,
+          "lanes": 16,
+          "slotFormFactor": "FHHL"
+        },
+        {
+          "count": 3,
+          "generation": 4,
+          "lanes": 8,
+          "slotFormFactor": "LP"
+        }
+      ],
+      "networkOptions": [
+        {
+          "adapterType": "OCP 3.0 Mezzanine",
+          "ports": 2,
+          "speedGbps": 25
+        }
+      ],
+      "powerSupplies": {
+        "redundancy": "1+1",
+        "maxPsuCount": 2,
+        "supportedWattages": [
+          1100,
+          1800,
+          2400
+        ],
+        "efficiencyRating": "Platinum",
+        "inputVoltage": "AC"
+      },
+      "maxPowerDrawWatts": 2400,
+      "cpuOptions": [
+        {
+          "sku": "Xeon Silver 4416+",
+          "architecture": "Sapphire Rapids",
+          "coresPerSocket": 20,
+          "threadsPerSocket": 40,
+          "baseClockGhz": 2,
+          "maxBoostClockGhz": 3.9,
+          "tdpWatts": 165,
+          "pcieLanesPerSocket": 80,
+          "memoryChannelsPerSocket": 8
+        }
+      ]
+    }
+  ]
+}
