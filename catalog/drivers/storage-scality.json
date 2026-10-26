@@ -1,0 +1,54 @@
+{
+  "$schema": "../storage.schema.json",
+  "id": "scality-object",
+  "pillar": "storage",
+  "vendor": "Scality",
+  "driverVersion": "1.0.0",
+  "description": "Scality ARTESCA & RING S3 Object Storage Platform",
+  "models": [
+    {
+      "modelName": "Scality ARTESCA",
+      "storageType": "Object_S3",
+      "architecture": "Scale-Out",
+      "protocolSupport": [
+        "S3",
+        "S3_Object_Lock"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 50,
+        "max": 10000
+      },
+      "dedupeCompressionRatio": 1,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "Tiered_Subscription",
+        "unitCostCurrency": "USD",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    },
+    {
+      "modelName": "Scality RING",
+      "storageType": "Object_S3",
+      "architecture": "Scale-Out",
+      "protocolSupport": [
+        "S3",
+        "S3_Object_Lock",
+        "NFS",
+        "SMB"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 200,
+        "max": 100000
+      },
+      "dedupeCompressionRatio": 1,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "Tiered_Subscription",
+        "unitCostCurrency": "USD",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    }
+  ]
+}

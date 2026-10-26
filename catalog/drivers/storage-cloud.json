@@ -1,0 +1,52 @@
+{
+  "$schema": "../storage.schema.json",
+  "id": "cloud-offsite-object",
+  "pillar": "storage",
+  "vendor": "Wasabi",
+  "driverVersion": "1.0.0",
+  "description": "Wasabi Hot Cloud Storage & PeaSoup UK Sovereign S3 Cloud",
+  "models": [
+    {
+      "modelName": "Wasabi Hot Cloud Storage",
+      "storageType": "Cloud_Offsite",
+      "architecture": "Cloud_Managed",
+      "protocolSupport": [
+        "S3",
+        "S3_Object_Lock"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 1,
+        "max": 50000
+      },
+      "dedupeCompressionRatio": 1,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "OpEx_PerTbMonth",
+        "unitCostCurrency": "USD",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    },
+    {
+      "modelName": "PeaSoup Sovereign Cloud",
+      "storageType": "Cloud_Offsite",
+      "architecture": "Cloud_Managed",
+      "protocolSupport": [
+        "S3",
+        "S3_Object_Lock"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 1,
+        "max": 20000
+      },
+      "dedupeCompressionRatio": 1,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "OpEx_PerTbMonth",
+        "unitCostCurrency": "GBP",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    }
+  ]
+}

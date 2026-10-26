@@ -1,0 +1,58 @@
+{
+  "$schema": "../storage.schema.json",
+  "id": "dell-powerstore",
+  "pillar": "storage",
+  "vendor": "Dell",
+  "driverVersion": "1.0.0",
+  "description": "Dell PowerStore Unified All-Flash Storage (1200T, 3200T, 5200T)",
+  "models": [
+    {
+      "modelName": "PowerStore 1200T",
+      "storageType": "Unified",
+      "architecture": "Scale-Out",
+      "protocolSupport": [
+        "NVMe-oF",
+        "FC",
+        "iSCSI",
+        "NFS",
+        "SMB"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 11.5,
+        "max": 1200
+      },
+      "dedupeCompressionRatio": 4,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "CapEx_Hardware",
+        "unitCostCurrency": "USD",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    },
+    {
+      "modelName": "PowerStore 3200T",
+      "storageType": "Unified",
+      "architecture": "Scale-Out",
+      "protocolSupport": [
+        "NVMe-oF",
+        "FC",
+        "iSCSI",
+        "NFS",
+        "SMB"
+      ],
+      "rawCapacityRangeTb": {
+        "min": 23,
+        "max": 2400
+      },
+      "dedupeCompressionRatio": 4,
+      "immutabilitySupport": true,
+      "pricingMetrics": {
+        "model": "CapEx_Hardware",
+        "unitCostCurrency": "USD",
+        "egressFeePerGb": 0,
+        "apiCallFeeIncluded": true
+      }
+    }
+  ]
+}
