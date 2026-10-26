@@ -6,7 +6,8 @@
   "scripts": {
     "validate:schemas": "node scripts/validate-schemas.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "check": "npm run validate:schemas && npm run typecheck"
+    "check": "npm run validate:schemas && npm run typecheck && npm run test:engine",
+    "test:engine": "node scripts/test-sizing-engine.cjs"
   },
   "engines": {
     "node": ">=20"

@@ -19,40 +19,44 @@ Modular multi-vendor Bill of Materials (BOM) sizing engine spanning 5 core infra
   - [x] Edge & Perimeter Security (`security.schema.json`)
   - [x] Cyber Resilience (`resilience.schema.json`)
   - [x] Common driver metadata & base specification (`base-driver.schema.json`)
-- [ ] Implement driver manifest registry (`catalog/drivers.json`)
 
 ## Phase 2: Catalog Data Ingestion & Vendor Driver Profiles
-- [ ] **Compute Drivers & Catalog Data:**
-  - [ ] Dell PowerEdge profile: R660 (1U dense compute), R760 (2U standard), R760xd2 (high-capacity storage node)
-  - [ ] Supermicro profile: 2U high-density storage / multi-node chassis
-- [ ] **Storage Drivers & Catalog Data:**
-  - [ ] Scality ARTESCA & RING object store profiles (capacity, tiering, S3 Object Lock compliance)
-  - [ ] PeaSoup & Wasabi cloud offsite tier pricing / egress models
-  - [ ] Dell PowerStore SAN/NAS block/file sizing (effective vs. raw, dedupe/compression assumptions)
-- [ ] **Networking Drivers & Catalog Data:**
-  - [ ] Dell PowerSwitch (ToR S5200 series) & Arista 7050X / 7060X profiles
-  - [ ] Port oversubscription, breakout cabling (QSFP28 100G to 4x25G SFP28), DAC/AOC compatibility
-- [ ] **Security Drivers & Catalog Data:**
-  - [ ] Check Point Quantum / Infinity (Security Gateway sizing, NGFW / TP throughput tiers, cluster HA)
-  - [ ] Fortinet FortiGate (FortiOS NGFW/Threat Prevention sizing, FGSP/FGCP HA pairs)
-  - [ ] Sophos XGS (Xstream architecture, TLS inspection overhead, HA)
-- [ ] **Cyber Resilience Drivers & Catalog Data:**
-  - [ ] Veeam Data Platform (VUL instance calculations, repository sizing, SOBR tiering)
-  - [ ] Commvault Cloud workload licensing & MediaAgent sizing
-  - [ ] Cohesity SmartFiles / DataProtect node calculations
+- [x] **Compute Drivers & Research:**
+  - [x] Dell PowerEdge profile: R660, R760, R760xd2 (`catalog/drivers/compute-dell.json`)
+  - [x] Supermicro profile: SSG-221P-NECTR24R (`catalog/drivers/compute-supermicro.json`)
+  - [x] Cited research brief (`docs/research/compute-pillar.md`)
+- [x] **Storage Drivers & Research:**
+  - [x] Dell PowerStore profile: 1200T, 3200T (`catalog/drivers/storage-dell.json`)
+  - [x] Scality profile: ARTESCA & RING S3 Object Lock (`catalog/drivers/storage-scality.json`)
+  - [x] Cloud offsite profile: Wasabi & PeaSoup (`catalog/drivers/storage-cloud.json`)
+  - [x] Cited research brief (`docs/research/storage-pillar.md`)
+- [x] **Networking Drivers & Research:**
+  - [x] Dell PowerSwitch: S5248F-ON ToR & Z9264F-ON Spine (`catalog/drivers/networking-dell.json`)
+  - [x] Arista: 7050SX3-48YC8 ToR & 7060CX-32S Spine (`catalog/drivers/networking-arista.json`)
+  - [x] Cited research brief (`docs/research/networking-pillar.md`)
+- [x] **Security Drivers & Research:**
+  - [x] Fortinet: FortiGate 200F & 600F (`catalog/drivers/security-fortinet.json`)
+  - [x] Check Point: Quantum 6600 (`catalog/drivers/security-checkpoint.json`)
+  - [x] Sophos: XGS 2300 (`catalog/drivers/security-sophos.json`)
+  - [x] Cited research brief (`docs/research/security-pillar.md`)
+- [x] **Cyber Resilience Drivers & Research:**
+  - [x] Veeam Data Platform: VUL instance sizing (`catalog/drivers/resilience-veeam.json`)
+  - [x] Commvault Cloud: FETB & MediaAgent sizing (`catalog/drivers/resilience-commvault.json`)
+  - [x] Cohesity DataProtect: SpanFS & DataLock (`catalog/drivers/resilience-cohesity.json`)
+  - [x] Cited research brief (`docs/research/resilience-pillar.md`)
 
 ## Phase 3: Sizing Engine Core & Calculation Logic
-- [ ] Workload & Requirement Input Schema:
-  - [ ] VM counts, vCPU:pCPU ratio, RAM allocation, IOPS, usable capacity, retention window, daily change rate.
-- [ ] Sizing Calculator Service:
-  - [ ] Compute & RAM headroom / N+1 cluster survivability calculator.
-  - [ ] Storage effective capacity & usable RAID / Erasure Coding parity overhead engine.
-  - [ ] Network port mapping & bandwidth aggregation engine.
-  - [ ] Firewall inspection throughput margin calculation (peak vs nominal with SSL inspection).
-  - [ ] Backup retention, dedupe ratio, and local immutable + offsite cloud replication sizing.
-- [ ] BOM Generator:
-  - [ ] Part number / SKU aggregation.
-  - [ ] Multi-vendor cross-validation rules (e.g., transceiver compatibility, power consumption/PDU checks).
+- [x] Workload & Requirement Input Schema (`src/types/sizing.ts`):
+  - [x] VM counts, vCPU:pCPU ratio, RAM allocation, IOPS, usable capacity, retention window, daily change rate.
+- [x] Sizing Calculator Engine (`src/engine/calculator.ts`):
+  - [x] Compute & RAM headroom with N+1/N+2 cluster survivability calculator.
+  - [x] Storage effective capacity & usable RAID / Erasure Coding parity overhead engine (4:1 DRR support).
+  - [x] Network port mapping & 3:1 leaf-spine bandwidth oversubscription engine.
+  - [x] Firewall inspection throughput margin calculation with SSL inspection overhead.
+  - [x] Backup retention, dedupe ratio, and local immutable + offsite cloud replication sizing.
+- [x] Bill of Materials (BOM) Generator:
+  - [x] Multi-vendor SKU and line item aggregation.
+  - [x] Automated end-to-end integration test suite (`scripts/test-sizing-engine.cjs`).
 
 ## Phase 4: UI Scaffolding & Solution Export
 - [ ] Interactive configuration wizard (multi-step pillar input).
