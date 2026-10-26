@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ComputeCatalogSchema",
+  "type": "object",
+  "required": [
+    "id",
+    "pillar",
+    "vendor",
+    "models"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "pillar": {
+      "type": "string",
+      "const": "compute"
+    },
+    "vendor": {
+      "type": "string",
+      "enum": [
+        "Dell",
+        "Supermicro",
+        "Generic"
+      ]
+    },
+    "driverVersion": {
+      "type": "string"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "modelName",
+          "formFactor",
+          "cpuSockets",
+          "maxMemoryGb",
+          "driveBays"
+        ],
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "example": "PowerEdge R760"
+          },
+          "formFactor": {
+            "type": "string",
+            "enum": [
+              "1U",
+              "2U",
+              "4U",
+              "Chassis-Blade"
+            ]
+          },
+          "cpuSockets": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "supportedCpuArchitectures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxMemoryGb": {
+            "type": "integer"
+          },
+          "memorySlots": {
+            "type": "integer"
+          },
+          "driveBays": {
+            "type": "object",
+            "properties": {
+              "formFactor": {
+                "type": "string",
+                "enum": [
+                  "2.5_SFF",
+                  "3.5_LFF",
+                  "E3.S",
+                  "NVMe_Direct"
+                ]
+              },
+              "maxSlots": {
+                "type": "integer"
+              },
+              "supportedInterfaces": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "SAS",
+                    "SATA",
+                    "NVMe",
+                    "PCIe5"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "formFactor",
+              "maxSlots"
+            ]
+          },
+          "pcieSlots": {
+            "type": "integer"
+          },
+          "networkOptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "adapterType": {
+                  "type": "string"
+                },
+                "ports": {
+                  "type": "integer"
+                },
+                "speedGbps": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "powerSupplies": {
+            "type": "object",
+            "properties": {
+              "redundancy": {
+                "type": "string",
+                "enum": [
+                  "1+0",
+                  "1+1",
+                  "2+2"
+                ]
+              },
+              "supportedWattages": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "maxPsuCount": {
+                "type": "integer",
+                "description": "Max PSUs installable",
+                "minimum": 1
+              },
+              "efficiencyRating": {
+                "type": "string",
+                "enum": [
+                  "Gold",
+                  "Platinum",
+                  "Titanium"
+                ]
+              },
+              "inputVoltage": {
+                "type": "string",
+                "enum": [
+                  "AC",
+                  "DC",
+                  "HVDC"
+                ]
+              }
+            }
+          },
+          "cpuOptions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "sku",
+                "coresPerSocket",
+                "baseClockGhz",
+                "tdpWatts"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string",
+                  "description": "CPU SKU, e.g. Xeon Gold 6444Y"
+                },
+                "architecture": {
+                  "type": "string",
+                  "description": "e.g. Sapphire Rapids, Genoa"
+                },
+                "coresPerSocket": {
+                  "type": "integer",
+                  "description": "Physical cores per socket",
+                  "minimum": 1
+                },
+                "threadsPerSocket": {
+                  "type": "integer",
+                  "description": "Logical threads per socket",
+                  "minimum": 1
+                },
+                "baseClockGhz": {
+                  "type": "number",
+                  "description": "Base clock speed (GHz)",
+                  "exclusiveMinimum": 0
+                },
+                "maxBoostClockGhz": {
+                  "type": "number",
+                  "description": "Max turbo/boost clock (GHz)",
+                  "exclusiveMinimum": 0
+                },
+                "tdpWatts": {
+                  "type": "integer",
+                  "description": "CPU TDP per socket (W)",
+                  "minimum": 1
+                },
+                "pcieLanesPerSocket": {
+                  "type": "integer",
+                  "description": "PCIe lanes exposed per socket",
+                  "minimum": 0
+                },
+                "memoryChannelsPerSocket": {
+                  "type": "integer",
+                  "description": "Memory channels per socket",
+                  "minimum": 1
+                }
+              }
+            },
+            "description": "Selectable CPU SKUs (cores, clock, TDP) used for core-count sizing and power budgeting"
+          },
+          "memoryType": {
+            "type": "string",
+            "enum": [
+              "DDR4",
+              "DDR5"
+            ]
+          },
+          "memorySpeedsMtps": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "DIMM speed (MT/s), e.g. 4800, 5600",
+              "minimum": 1
+            },
+            "description": "Supported RAM speeds"
+          },
+          "maxDimmSizeGb": {
+            "type": "integer",
+            "description": "Largest supported single DIMM (GB)",
+            "minimum": 1
+          },
+          "pcieLanesTotal": {
+            "type": "integer",
+            "description": "Total PCIe lanes available to slots/OCP/drives",
+            "minimum": 0
+          },
+          "pcieSlotDetails": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "count",
+                "generation",
+                "lanes"
+              ],
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "description": "Number of slots of this type",
+                  "minimum": 1
+                },
+                "generation": {
+                  "type": "integer",
+                  "enum": [
+                    3,
+                    4,
+                    5,
+                    6
+                  ]
+                },
+                "lanes": {
+                  "type": "integer",
+                  "enum": [
+                    1,
+                    4,
+                    8,
+                    16
+                  ]
+                },
+                "slotFormFactor": {
+                  "type": "string",
+                  "enum": [
+                    "FHFL",
+                    "FHHL",
+                    "LP",
+                    "OCP3",
+                    "Riser"
+                  ]
+                }
+              }
+            },
+            "description": "PCIe slot inventory by generation/width"
+          },
+          "maxPowerDrawWatts": {
+            "type": "integer",
+            "description": "Maximum configured chassis power draw (W), for PDU/circuit checks",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  }
+}

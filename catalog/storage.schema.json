@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StorageCatalogSchema",
+  "type": "object",
+  "required": [
+    "id",
+    "pillar",
+    "vendor",
+    "models"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "pillar": {
+      "type": "string",
+      "const": "storage"
+    },
+    "vendor": {
+      "type": "string",
+      "enum": [
+        "Scality",
+        "PeaSoup",
+        "Wasabi",
+        "Dell",
+        "Generic"
+      ]
+    },
+    "driverVersion": {
+      "type": "string"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "modelName",
+          "storageType",
+          "protocolSupport"
+        ],
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "example": "PowerStore 1200T / Scality ARTESCA"
+          },
+          "storageType": {
+            "type": "string",
+            "enum": [
+              "SAN_Block",
+              "NAS_File",
+              "Unified",
+              "Object_S3",
+              "Cloud_Offsite"
+            ]
+          },
+          "architecture": {
+            "type": "string",
+            "enum": [
+              "Scale-Up",
+              "Scale-Out",
+              "Cloud_Managed"
+            ]
+          },
+          "protocolSupport": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "iSCSI",
+                "FC",
+                "NVMe-oF",
+                "NFS",
+                "SMB",
+                "S3",
+                "S3_Object_Lock"
+              ]
+            }
+          },
+          "rawCapacityRangeTb": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ]
+          },
+          "dedupeCompressionRatio": {
+            "type": "number",
+            "description": "Expected data reduction ratio (e.g., 3.5 for 3.5:1)"
+          },
+          "immutabilitySupport": {
+            "type": "boolean"
+          },
+          "pricingMetrics": {
+            "type": "object",
+            "properties": {
+              "model": {
+                "type": "string",
+                "enum": [
+                  "CapEx_Hardware",
+                  "OpEx_PerTbMonth",
+                  "Tiered_Subscription"
+                ]
+              },
+              "unitCostCurrency": {
+                "type": "string"
+              },
+              "egressFeePerGb": {
+                "type": "number"
+              },
+              "apiCallFeeIncluded": {
+                "type": "boolean"
+              }
+            }
+          },
+          "accessModes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Block",
+                "File",
+                "Object"
+              ]
+            },
+            "description": "Access classes offered (Block=iSCSI/FC/NVMe-oF, File=NFS/SMB, Object=S3)"
+          },
+          "usableCapacity": {
+            "type": "object",
+            "description": "usable = raw * dataFraction * (1 - spareFraction) * (1 - systemOverheadFraction), before data reduction",
+            "properties": {
+              "spareFraction": {
+                "type": "number",
+                "description": "Fraction of raw reserved for spares/rebuild",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "systemOverheadFraction": {
+                "type": "number",
+                "description": "Fraction of raw consumed by metadata/filesystem",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "protectionSchemes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "type"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "e.g. RAID6 8+2, EC 7+3"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "RAID1",
+                        "RAID5",
+                        "RAID6",
+                        "RAID10",
+                        "Erasure_Coding",
+                        "Replication",
+                        "Vendor_Proprietary",
+                        "None"
+                      ]
+                    },
+                    "dataUnits": {
+                      "type": "integer",
+                      "description": "Data fragments/drives (k)",
+                      "minimum": 1
+                    },
+                    "parityUnits": {
+                      "type": "integer",
+                      "description": "Parity fragments/drives (m)",
+                      "minimum": 0
+                    },
+                    "replicaCount": {
+                      "type": "integer",
+                      "description": "Copies for Replication",
+                      "minimum": 1
+                    },
+                    "minFailureDomains": {
+                      "type": "integer",
+                      "description": "Minimum nodes/drives needed",
+                      "minimum": 1
+                    },
+                    "usableFraction": {
+                      "type": "number",
+                      "description": "Precomputed data fraction, e.g. k/(k+m); overrides k/m when set",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "formula": {
+                      "type": "string",
+                      "description": "Human-readable formula, e.g. \"usable = raw * k/(k+m)\""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "performance": {
+            "type": "object",
+            "properties": {
+              "iopsProfiles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "profile",
+                    "iops"
+                  ],
+                  "properties": {
+                    "profile": {
+                      "type": "string",
+                      "description": "e.g. 4K_Random_Read, 8K_70R30W_Mixed"
+                    },
+                    "ioSizeKb": {
+                      "type": "number",
+                      "description": "I/O size (KB)",
+                      "exclusiveMinimum": 0
+                    },
+                    "readPercent": {
+                      "type": "number",
+                      "description": "Read share of workload (0-100)",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "iops": {
+                      "type": "integer",
+                      "description": "IOPS at this profile (per scalingUnit)",
+                      "minimum": 0
+                    },
+                    "latencyMs": {
+                      "type": "number",
+                      "description": "Target latency (ms)",
+                      "minimum": 0
+                    }
+                  }
+                }
+              },
+              "throughput": {
+                "type": "object",
+                "properties": {
+                  "sequentialReadMBps": {
+                    "type": "number",
+                    "description": "MB/s",
+                    "minimum": 0
+                  },
+                  "sequentialWriteMBps": {
+                    "type": "number",
+                    "description": "MB/s",
+                    "minimum": 0
+                  }
+                }
+              },
+              "scalingUnit": {
+                "type": "string",
+                "enum": [
+                  "System",
+                  "Node",
+                  "Drive",
+                  "Shelf"
+                ],
+                "description": "What the performance figures apply to"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CyberResilienceCatalogSchema",
+  "type": "object",
+  "required": [
+    "id",
+    "pillar",
+    "vendor",
+    "editions"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "pillar": {
+      "type": "string",
+      "const": "resilience"
+    },
+    "vendor": {
+      "type": "string",
+      "enum": [
+        "Veeam",
+        "Commvault",
+        "Cohesity",
+        "Generic"
+      ]
+    },
+    "driverVersion": {
+      "type": "string"
+    },
+    "editions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "editionName",
+          "licensingModel",
+          "supportedWorkloads"
+        ],
+        "properties": {
+          "editionName": {
+            "type": "string",
+            "example": "Veeam Data Platform Advanced / Commvault Cloud / Cohesity DataProtect"
+          },
+          "licensingModel": {
+            "type": "string",
+            "enum": [
+              "VUL_Per_Instance",
+              "Per_Socket",
+              "Capacity_FrontEnd_TB",
+              "Per_User_M365",
+              "Consumption",
+              "Per_Workload_Unit"
+            ]
+          },
+          "supportedWorkloads": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "VMware",
+                "Hyper-V",
+                "AHV",
+                "Physical_Server",
+                "NAS_File",
+                "M365",
+                "Kubernetes",
+                "Cloud_Native"
+              ]
+            }
+          },
+          "immutabilitySupport": {
+            "type": "object",
+            "properties": {
+              "hardenedRepositoryLinux": {
+                "type": "boolean"
+              },
+              "s3ObjectLock": {
+                "type": "boolean"
+              },
+              "retentionLock": {
+                "type": "boolean"
+              },
+              "airGapTiers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Logical_Air_Gap",
+                    "Offline_Tape",
+                    "Isolated_Recovery_Vault",
+                    "Cloud_Vault"
+                  ]
+                },
+                "description": "Air-gap tiers supported"
+              }
+            }
+          },
+          "sizingFormulas": {
+            "type": "object",
+            "properties": {
+              "recommendedProxyCpuPerConcurrentTask": {
+                "type": "number"
+              },
+              "recommendedProxyRamGbPerConcurrentTask": {
+                "type": "number"
+              },
+              "dedupeCompressionEstimateRatio": {
+                "type": "number"
+              }
+            }
+          },
+          "licensingDetails": {
+            "type": "object",
+            "description": "Unit math for licence counting",
+            "properties": {
+              "unitName": {
+                "type": "string",
+                "description": "e.g. VUL, workload, front-end TB"
+              },
+              "unitsPerWorkload": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "workload",
+                    "units"
+                  ],
+                  "properties": {
+                    "workload": {
+                      "type": "string",
+                      "enum": [
+                        "VMware",
+                        "Hyper-V",
+                        "AHV",
+                        "Physical_Server",
+                        "NAS_File",
+                        "M365",
+                        "Kubernetes",
+                        "Cloud_Native"
+                      ]
+                    },
+                    "units": {
+                      "type": "number",
+                      "description": "Licence units consumed per workload (e.g. 1 VUL per VM)",
+                      "minimum": 0
+                    },
+                    "perUnitOf": {
+                      "type": "string",
+                      "enum": [
+                        "Instance",
+                        "Socket",
+                        "User",
+                        "TB"
+                      ]
+                    }
+                  }
+                },
+                "description": "Workload-unit conversion table"
+              },
+              "frontEndTbBasis": {
+                "type": "string",
+                "description": "How front-end TB is measured, e.g. \"largest full backup\", \"source data before dedupe\""
+              },
+              "minimumUnits": {
+                "type": "number",
+                "description": "Minimum purchasable quantity",
+                "minimum": 0
+              },
+              "termYears": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "description": "Available subscription terms (years)",
+                  "minimum": 1
+                }
+              }
+            }
+          },
+          "compatibleRepositories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "Hardened_Linux_Repo",
+                    "S3_Object_Lock",
+                    "S3_Compatible",
+                    "Dedupe_Appliance",
+                    "NAS_SMB_NFS",
+                    "Tape",
+                    "Cloud_Object"
+                  ]
+                },
+                "immutable": {
+                  "type": "boolean"
+                },
+                "airGapTier": {
+                  "type": "string",
+                  "enum": [
+                    "None",
+                    "Logical_Air_Gap",
+                    "Offline_Tape",
+                    "Isolated_Recovery_Vault",
+                    "Cloud_Vault"
+                  ]
+                },
+                "notes": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Target repositories this edition can write to (storage-pillar compatibility matching)"
+          }
+        }
+      }
+    }
+  }
+}

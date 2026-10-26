@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SecurityCatalogSchema",
+  "type": "object",
+  "required": [
+    "id",
+    "pillar",
+    "vendor",
+    "models"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "pillar": {
+      "type": "string",
+      "const": "security"
+    },
+    "vendor": {
+      "type": "string",
+      "enum": [
+        "Check Point",
+        "Fortinet",
+        "Sophos",
+        "Generic"
+      ]
+    },
+    "driverVersion": {
+      "type": "string"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "modelName",
+          "firewallThroughputGbps",
+          "threatPreventionThroughputGbps",
+          "haSupport"
+        ],
+        "properties": {
+          "modelName": {
+            "type": "string",
+            "example": "FortiGate 200F / Quantum 6600 / Sophos XGS 2300"
+          },
+          "series": {
+            "type": "string"
+          },
+          "firewallThroughputGbps": {
+            "type": "number"
+          },
+          "ngfwThroughputGbps": {
+            "type": "number"
+          },
+          "threatPreventionThroughputGbps": {
+            "type": "number"
+          },
+          "sslInspectionThroughputGbps": {
+            "type": "number"
+          },
+          "maxConcurrentSessions": {
+            "type": "integer"
+          },
+          "newSessionsPerSecond": {
+            "type": "integer"
+          },
+          "networkInterfaces": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "speedGbps": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "haSupport": {
+            "type": "object",
+            "properties": {
+              "modes": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "Active-Passive",
+                    "Active-Active",
+                    "ClusterXL",
+                    "FGCP",
+                    "FGSP"
+                  ]
+                }
+              },
+              "dedicatedSyncPorts": {
+                "type": "integer"
+              },
+              "pairConfig": {
+                "type": "object",
+                "description": "HA pair/cluster sizing parameters",
+                "properties": {
+                  "maxClusterMembers": {
+                    "type": "integer",
+                    "description": "2 for a classic pair",
+                    "minimum": 2
+                  },
+                  "requiresIdenticalHardware": {
+                    "type": "boolean"
+                  },
+                  "syncPortType": {
+                    "type": "string",
+                    "description": "e.g. SFP+, RJ45"
+                  },
+                  "syncPortSpeedGbps": {
+                    "type": "number",
+                    "description": "Sync link speed (Gbps)",
+                    "exclusiveMinimum": 0
+                  },
+                  "activeActiveThroughputFactor": {
+                    "type": "number",
+                    "description": "Pair throughput multiplier vs one unit in Active-Active (1.0 = no gain)",
+                    "minimum": 0
+                  },
+                  "licensePerNode": {
+                    "type": "boolean",
+                    "description": "True if each pair member needs its own subscription"
+                  }
+                }
+              }
+            }
+          },
+          "licensingTiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "includedServices": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "throughputBasis": {
+            "type": "string",
+            "description": "Test basis for datasheet figures, e.g. \"Enterprise testing conditions, 1518B UDP\""
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BaseDriverDefinition",
+  "type": "object",
+  "required": [
+    "id",
+    "pillar",
+    "vendor",
+    "driverVersion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique driver identifier (e.g., 'dell-poweredge')"
+    },
+    "pillar": {
+      "type": "string",
+      "enum": [
+        "compute",
+        "storage",
+        "networking",
+        "security",
+        "resilience"
+      ]
+    },
+    "vendor": {
+      "type": "string"
+    },
+    "driverVersion": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Hardware/appliance models (compute, storage, networking, security pillars)"
+    },
+    "editions": {
+      "type": "array",
+      "description": "Used by the resilience pillar instead of models",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "models"
+      ]
+    },
+    {
+      "required": [
+        "editions"
+      ]
+    }
+  ]
+}
