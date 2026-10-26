@@ -1,0 +1,71 @@
+{
+  "$schema": "../networking.schema.json",
+  "id": "dell-powerswitch",
+  "pillar": "networking",
+  "vendor": "Dell",
+  "driverVersion": "1.0.0",
+  "description": "Dell PowerSwitch S-Series & Z-Series Data Centre Switches",
+  "models": [
+    {
+      "modelName": "PowerSwitch S5248F-ON",
+      "role": "ToR_Leaf",
+      "formFactor": "1U",
+      "switchingCapacityTbps": 4,
+      "ports": [
+        {
+          "count": 48,
+          "connectorType": "SFP28",
+          "speedGbps": 25,
+          "breakoutCapable": false
+        },
+        {
+          "count": 6,
+          "connectorType": "QSFP28",
+          "speedGbps": 100,
+          "breakoutCapable": true
+        },
+        {
+          "count": 2,
+          "connectorType": "QSFP-DD",
+          "speedGbps": 100,
+          "breakoutCapable": true
+        }
+      ],
+      "cableSupport": [
+        "Passive_DAC",
+        "Active_AOC",
+        "Optical_Transceiver"
+      ],
+      "supportedFeatures": [
+        "MLAG",
+        "EVPN-VXLAN",
+        "BGP",
+        "RoCEv2"
+      ]
+    },
+    {
+      "modelName": "PowerSwitch Z9264F-ON",
+      "role": "Spine",
+      "formFactor": "2U",
+      "switchingCapacityTbps": 12.8,
+      "ports": [
+        {
+          "count": 64,
+          "connectorType": "QSFP28",
+          "speedGbps": 100,
+          "breakoutCapable": true
+        }
+      ],
+      "cableSupport": [
+        "Passive_DAC",
+        "Active_AOC",
+        "Optical_Transceiver"
+      ],
+      "supportedFeatures": [
+        "BGP",
+        "EVPN-VXLAN",
+        "RoCEv2"
+      ]
+    }
+  ]
+}

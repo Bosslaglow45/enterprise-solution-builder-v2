@@ -1,0 +1,67 @@
+{
+  "$schema": "../networking.schema.json",
+  "id": "arista-eos-switch",
+  "pillar": "networking",
+  "vendor": "Arista",
+  "driverVersion": "1.0.0",
+  "description": "Arista 7050X3 & 7060X Data Centre Switches",
+  "models": [
+    {
+      "modelName": "Arista 7050SX3-48YC8",
+      "role": "ToR_Leaf",
+      "formFactor": "1U",
+      "switchingCapacityTbps": 4,
+      "ports": [
+        {
+          "count": 48,
+          "connectorType": "SFP28",
+          "speedGbps": 25,
+          "breakoutCapable": false
+        },
+        {
+          "count": 8,
+          "connectorType": "QSFP28",
+          "speedGbps": 100,
+          "breakoutCapable": true
+        }
+      ],
+      "cableSupport": [
+        "Passive_DAC",
+        "Active_AOC",
+        "Optical_Transceiver"
+      ],
+      "supportedFeatures": [
+        "MLAG",
+        "EVPN-VXLAN",
+        "BGP",
+        "RoCEv2",
+        "PTP"
+      ]
+    },
+    {
+      "modelName": "Arista 7060CX-32S",
+      "role": "Spine",
+      "formFactor": "1U",
+      "switchingCapacityTbps": 6.4,
+      "ports": [
+        {
+          "count": 32,
+          "connectorType": "QSFP28",
+          "speedGbps": 100,
+          "breakoutCapable": true
+        }
+      ],
+      "cableSupport": [
+        "Passive_DAC",
+        "Active_AOC",
+        "Optical_Transceiver"
+      ],
+      "supportedFeatures": [
+        "BGP",
+        "EVPN-VXLAN",
+        "RoCEv2",
+        "PTP"
+      ]
+    }
+  ]
+}
