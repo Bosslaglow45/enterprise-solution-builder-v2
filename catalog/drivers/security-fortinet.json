@@ -1,0 +1,116 @@
+{
+  "$schema": "../security.schema.json",
+  "id": "fortinet-fortigate",
+  "pillar": "security",
+  "vendor": "Fortinet",
+  "driverVersion": "1.0.0",
+  "models": [
+    {
+      "modelName": "FortiGate 200F",
+      "series": "FortiGate Mid-Range",
+      "firewallThroughputGbps": 27,
+      "ngfwThroughputGbps": 3.5,
+      "threatPreventionThroughputGbps": 3,
+      "sslInspectionThroughputGbps": 4,
+      "maxConcurrentSessions": 3000000,
+      "newSessionsPerSecond": 280000,
+      "networkInterfaces": [
+        {
+          "count": 16,
+          "type": "RJ45",
+          "speedGbps": 1
+        },
+        {
+          "count": 8,
+          "type": "SFP+",
+          "speedGbps": 10
+        }
+      ],
+      "haSupport": {
+        "modes": [
+          "Active-Passive",
+          "Active-Active",
+          "FGCP",
+          "FGSP"
+        ],
+        "dedicatedSyncPorts": 2
+      },
+      "licensingTiers": [
+        {
+          "name": "Unified Threat Protection (UTP)",
+          "includedServices": [
+            "IPS",
+            "Advanced Malware",
+            "Application Control",
+            "Web Filtering"
+          ]
+        },
+        {
+          "name": "Enterprise Protection",
+          "includedServices": [
+            "UTP",
+            "Security Rating",
+            "IoT Detection",
+            "Industrial Security"
+          ]
+        }
+      ]
+    },
+    {
+      "modelName": "FortiGate 600F",
+      "series": "FortiGate Enterprise",
+      "firewallThroughputGbps": 139,
+      "ngfwThroughputGbps": 10.5,
+      "threatPreventionThroughputGbps": 9.5,
+      "sslInspectionThroughputGbps": 8,
+      "maxConcurrentSessions": 8000000,
+      "newSessionsPerSecond": 550000,
+      "networkInterfaces": [
+        {
+          "count": 4,
+          "type": "SFP28",
+          "speedGbps": 25
+        },
+        {
+          "count": 4,
+          "type": "SFP+",
+          "speedGbps": 10
+        },
+        {
+          "count": 16,
+          "type": "RJ45",
+          "speedGbps": 1
+        }
+      ],
+      "haSupport": {
+        "modes": [
+          "Active-Passive",
+          "Active-Active",
+          "FGCP",
+          "FGSP"
+        ],
+        "dedicatedSyncPorts": 2
+      },
+      "licensingTiers": [
+        {
+          "name": "Unified Threat Protection (UTP)",
+          "includedServices": [
+            "IPS",
+            "Advanced Malware",
+            "Application Control",
+            "Web Filtering"
+          ]
+        },
+        {
+          "name": "Enterprise Protection",
+          "includedServices": [
+            "UTP",
+            "Security Rating",
+            "IoT Detection",
+            "Industrial Security"
+          ]
+        }
+      ]
+    }
+  ]
+}

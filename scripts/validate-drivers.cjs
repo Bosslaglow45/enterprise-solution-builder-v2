@@ -6,10 +6,12 @@ const ajv = new Ajv({ strict: false });
 const computeSchema = JSON.parse(fs.readFileSync('catalog/compute.schema.json', 'utf8'));
 const storageSchema = JSON.parse(fs.readFileSync('catalog/storage.schema.json', 'utf8'));
 const networkingSchema = JSON.parse(fs.readFileSync('catalog/networking.schema.json', 'utf8'));
+const securitySchema = JSON.parse(fs.readFileSync('catalog/security.schema.json', 'utf8'));
 
 const validateCompute = ajv.compile(computeSchema);
 const validateStorage = ajv.compile(storageSchema);
 const validateNetworking = ajv.compile(networkingSchema);
+const validateSecurity = ajv.compile(securitySchema);
 
 const computeFiles = [
   'catalog/drivers/compute-dell.json',
@@ -25,6 +27,12 @@ const storageFiles = [
 const networkingFiles = [
   'catalog/drivers/networking-dell.json',
   'catalog/drivers/networking-arista.json'
+];
+
+const securityFiles = [
+  'catalog/drivers/security-fortinet.json',
+  'catalog/drivers/security-checkpoint.json',
+  'catalog/drivers/security-sophos.json'
 ];
 
 let allValid = true;
@@ -45,5 +53,6 @@ function runValidation(files, validator, label) {
 runValidation(computeFiles, validateCompute, 'Compute');
 runValidation(storageFiles, validateStorage, 'Storage');
 runValidation(networkingFiles, validateNetworking, 'Networking');
+runValidation(securityFiles, validateSecurity, 'Security');
 
 process.exit(allValid ? 0 : 1);

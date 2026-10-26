@@ -1,0 +1,55 @@
+{
+  "$schema": "../security.schema.json",
+  "id": "sophos-xgs",
+  "pillar": "security",
+  "vendor": "Sophos",
+  "driverVersion": "1.0.0",
+  "models": [
+    {
+      "modelName": "Sophos XGS 2300",
+      "series": "XGS Series Mid-Market",
+      "firewallThroughputGbps": 35,
+      "ngfwThroughputGbps": 4.5,
+      "threatPreventionThroughputGbps": 1.4,
+      "sslInspectionThroughputGbps": 1.45,
+      "maxConcurrentSessions": 6500000,
+      "newSessionsPerSecond": 135000,
+      "networkInterfaces": [
+        {
+          "count": 8,
+          "type": "RJ45",
+          "speedGbps": 1
+        },
+        {
+          "count": 2,
+          "type": "SFP+",
+          "speedGbps": 10
+        }
+      ],
+      "haSupport": {
+        "modes": [
+          "Active-Passive",
+          "Active-Active"
+        ],
+        "dedicatedSyncPorts": 1
+      },
+      "licensingTiers": [
+        {
+          "name": "Standard Protection",
+          "includedServices": [
+            "Network Protection",
+            "Web Protection"
+          ]
+        },
+        {
+          "name": "Xstream Protection",
+          "includedServices": [
+            "Standard Protection",
+            "Zero-Day Protection",
+            "Central Orchestration"
+          ]
+        }
+      ]
+    }
+  ]
+}

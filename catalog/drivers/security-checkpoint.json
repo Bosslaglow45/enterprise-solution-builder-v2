@@ -1,0 +1,59 @@
+{
+  "$schema": "../security.schema.json",
+  "id": "checkpoint-quantum",
+  "pillar": "security",
+  "vendor": "Check Point",
+  "driverVersion": "1.0.0",
+  "models": [
+    {
+      "modelName": "Quantum 6600",
+      "series": "Quantum Security Gateway",
+      "firewallThroughputGbps": 18,
+      "ngfwThroughputGbps": 6.2,
+      "threatPreventionThroughputGbps": 3.7,
+      "sslInspectionThroughputGbps": 3.3,
+      "maxConcurrentSessions": 4000000,
+      "newSessionsPerSecond": 160000,
+      "networkInterfaces": [
+        {
+          "count": 16,
+          "type": "RJ45",
+          "speedGbps": 1
+        },
+        {
+          "count": 8,
+          "type": "SFP+",
+          "speedGbps": 10
+        }
+      ],
+      "haSupport": {
+        "modes": [
+          "Active-Passive",
+          "Active-Active",
+          "ClusterXL"
+        ],
+        "dedicatedSyncPorts": 2
+      },
+      "licensingTiers": [
+        {
+          "name": "SandBlast Threat Prevention (SNBT)",
+          "includedServices": [
+            "Firewall",
+            "IPS",
+            "Application Control",
+            "Anti-Bot",
+            "Threat Emulation"
+          ]
+        },
+        {
+          "name": "SandBlast Complete (SNBC)",
+          "includedServices": [
+            "SNBT",
+            "Threat Extraction",
+            "Zero-Day Protection"
+          ]
+        }
+      ]
+    }
+  ]
+}
