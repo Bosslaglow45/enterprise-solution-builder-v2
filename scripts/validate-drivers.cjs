@@ -7,11 +7,13 @@ const computeSchema = JSON.parse(fs.readFileSync('catalog/compute.schema.json', 
 const storageSchema = JSON.parse(fs.readFileSync('catalog/storage.schema.json', 'utf8'));
 const networkingSchema = JSON.parse(fs.readFileSync('catalog/networking.schema.json', 'utf8'));
 const securitySchema = JSON.parse(fs.readFileSync('catalog/security.schema.json', 'utf8'));
+const resilienceSchema = JSON.parse(fs.readFileSync('catalog/resilience.schema.json', 'utf8'));
 
 const validateCompute = ajv.compile(computeSchema);
 const validateStorage = ajv.compile(storageSchema);
 const validateNetworking = ajv.compile(networkingSchema);
 const validateSecurity = ajv.compile(securitySchema);
+const validateResilience = ajv.compile(resilienceSchema);
 
 const computeFiles = [
   'catalog/drivers/compute-dell.json',
@@ -35,6 +37,12 @@ const securityFiles = [
   'catalog/drivers/security-sophos.json'
 ];
 
+const resilienceFiles = [
+  'catalog/drivers/resilience-veeam.json',
+  'catalog/drivers/resilience-commvault.json',
+  'catalog/drivers/resilience-cohesity.json'
+];
+
 let allValid = true;
 
 function runValidation(files, validator, label) {
@@ -54,5 +62,6 @@ runValidation(computeFiles, validateCompute, 'Compute');
 runValidation(storageFiles, validateStorage, 'Storage');
 runValidation(networkingFiles, validateNetworking, 'Networking');
 runValidation(securityFiles, validateSecurity, 'Security');
+runValidation(resilienceFiles, validateResilience, 'Resilience');
 
 process.exit(allValid ? 0 : 1);

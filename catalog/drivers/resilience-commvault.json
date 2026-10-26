@@ -1,0 +1,32 @@
+{
+  "$schema": "../resilience.schema.json",
+  "id": "commvault-cloud",
+  "pillar": "resilience",
+  "vendor": "Commvault",
+  "driverVersion": "1.0.0",
+  "editions": [
+    {
+      "editionName": "Commvault Cloud Backup & Recovery",
+      "licensingModel": "Capacity_FrontEnd_TB",
+      "supportedWorkloads": [
+        "VMware",
+        "Hyper-V",
+        "Physical_Server",
+        "NAS_File",
+        "M365",
+        "Kubernetes",
+        "Cloud_Native"
+      ],
+      "immutabilitySupport": {
+        "hardenedRepositoryLinux": true,
+        "s3ObjectLock": true,
+        "retentionLock": true
+      },
+      "sizingFormulas": {
+        "recommendedProxyCpuPerConcurrentTask": 2,
+        "recommendedProxyRamGbPerConcurrentTask": 4,
+        "dedupeCompressionEstimateRatio": 3.5
+      }
+    }
+  ]
+}

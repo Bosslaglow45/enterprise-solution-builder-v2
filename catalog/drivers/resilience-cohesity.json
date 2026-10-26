@@ -1,0 +1,33 @@
+{
+  "$schema": "../resilience.schema.json",
+  "id": "cohesity-dataprotect",
+  "pillar": "resilience",
+  "vendor": "Cohesity",
+  "driverVersion": "1.0.0",
+  "editions": [
+    {
+      "editionName": "Cohesity DataProtect",
+      "licensingModel": "Consumption",
+      "supportedWorkloads": [
+        "VMware",
+        "Hyper-V",
+        "AHV",
+        "Physical_Server",
+        "NAS_File",
+        "M365",
+        "Kubernetes",
+        "Cloud_Native"
+      ],
+      "immutabilitySupport": {
+        "hardenedRepositoryLinux": false,
+        "s3ObjectLock": true,
+        "retentionLock": true
+      },
+      "sizingFormulas": {
+        "recommendedProxyCpuPerConcurrentTask": 1,
+        "recommendedProxyRamGbPerConcurrentTask": 2,
+        "dedupeCompressionEstimateRatio": 3.2
+      }
+    }
+  ]
+}
