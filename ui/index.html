@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Solution Builder v2.0</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --accent: #38bdf8;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --success: #4ade80;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--accent);
+    }
+    .badge {
+      background: #0369a1;
+      color: #e0f2fe;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #7dd3fc;
+    }
+    .btn-secondary {
+      background: #334155;
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: #475569;
+    }
+    .results-section {
+      grid-column: span 2;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 13px;
+    }
+    th {
+      background: #1e293b;
+      color: var(--accent);
+    }
+    tr:nth-child(even) {
+      background: #131c2e;
+    }
+    .stat-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .stat-pill.compute { background: #4338ca; color: #e0e7ff; }
+    .stat-pill.storage { background: #065f46; color: #d1fae5; }
+    .stat-pill.networking { background: #92400e; color: #fef3c7; }
+    .stat-pill.security { background: #991b1b; color: #fee2e2; }
+    .stat-pill.resilience { background: #6b21a8; color: #f3e8ff; }
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Enterprise Solution Builder v2.0</h1>
+      <small style="color: var(--muted);">Modular Multi-Vendor Infrastructure Sizing Engine</small>
+    </div>
+    <span class="badge">Phase 4 UI Active</span>
+  </div>
+
+  <div class="grid">
+    <!-- Workload Inputs Card -->
+    <div class="card">
+      <h2>Workload & Infrastructure Inputs</h2>
+      <div class="form-group">
+        <label>Project / Environment Name</label>
+        <input type="text" id="envName" value="Global Data Center Modernization" />
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label>Total Virtual Machines</label>
+          <input type="number" id="vms" value="150" />
+        </div>
+        <div class="form-group">
+          <label>vCPU:pCPU Ratio</label>
+          <input type="number" id="vcpuRatio" step="0.5" value="3.0" />
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label>Compute Vendor</label>
+          <select id="computeVendor">
+            <option value="Dell" selected>Dell PowerEdge 16G (R760)</option>
+            <option value="Supermicro">Supermicro SuperServer (221P)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Survivability Margin</label>
+          <select id="survivability">
+            <option value="1" selected>N+1 Redundancy</option>
+            <option value="2">N+2 High Redundancy</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label>Workload Usable Storage (TB)</label>
+          <input type="number" id="storageTb" value="120" />
+        </div>
+        <div class="form-group">
+          <label>Storage Platform</label>
+          <select id="storageVendor">
+            <option value="Dell" selected>Dell PowerStore (4:1 DRR)</option>
+            <option value="Scality">Scality ARTESCA / RING (S3 WORM)</option>
+            <option value="Wasabi">Wasabi Hot Cloud Storage</option>
+            <option value="PeaSoup">PeaSoup UK Sovereign S3</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label>Network Fabric Vendor</label>
+          <select id="networkVendor">
+            <option value="Dell" selected>Dell PowerSwitch S5200/Z9200</option>
+            <option value="Arista">Arista 7050X3 / 7060X</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Security NGFW Vendor</label>
+          <select id="secVendor">
+            <option value="Fortinet" selected>Fortinet FortiGate (HA Pair)</option>
+            <option value="Check Point">Check Point Quantum 6600</option>
+            <option value="Sophos">Sophos XGS 2300</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Resilience / Backup Platform</label>
+        <select id="resVendor">
+          <option value="Veeam" selected>Veeam Data Platform (VUL Instances)</option>
+          <option value="Commvault">Commvault Cloud (Front-End TB)</option>
+          <option value="Cohesity">Cohesity DataProtect</option>
+        </select>
+      </div>
+
+      <button class="btn" onclick="runCalculation()">Recalculate Solution BOM</button>
+    </div>
+
+    <!-- Sizing Output Summary Card -->
+    <div class="card">
+      <h2>Architectural Sizing Verdict</h2>
+      <div id="sizingMetrics" style="font-size: 14px; line-height: 1.8;">
+        <!-- Injected via JS -->
+      </div>
+      <div class="actions-bar">
+        <button class="btn btn-secondary" onclick="exportCsv()">Export CSV BOM</button>
+        <button class="btn btn-secondary" onclick="exportMarkdown()">Download Executive Summary</button>
+      </div>
+    </div>
+
+    <!-- BOM Results Table -->
+    <div class="card results-section">
+      <h2>Consolidated Multi-Vendor Bill of Materials (BOM)</h2>
+      <table id="bomTable">
+        <thead>
+          <tr>
+            <th>Pillar</th>
+            <th>Vendor</th>
+            <th>Part / Model</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Technical Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Injected via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function runCalculation() {
+      const vms = parseInt(document.getElementById('vms').value) || 100;
+      const vcpuRatio = parseFloat(document.getElementById('vcpuRatio').value) || 3.0;
+      const compVendor = document.getElementById('computeVendor').value;
+      const margin = parseInt(document.getElementById('survivability').value) || 1;
+      const storageTb = parseFloat(document.getElementById('storageTb').value) || 100;
+      const storageVendor = document.getElementById('storageVendor').value;
+      const netVendor = document.getElementById('networkVendor').value;
+      const secVendor = document.getElementById('secVendor').value;
+      const resVendor = document.getElementById('resVendor').value;
+
+      // Compute sizing
+      const totalVcpus = vms * 4;
+      const requiredPhysicalCores = Math.ceil(totalVcpus / vcpuRatio);
+      const totalRamGb = vms * 16;
+      const coresPerNode = 64;
+      const ramPerNode = 512;
+      const baseNodes = Math.max(Math.ceil(requiredPhysicalCores / coresPerNode), Math.ceil(totalRamGb / ramPerNode), 2);
+      const totalNodes = baseNodes + margin;
+      const nodeModel = compVendor === 'Supermicro' ? 'Supermicro SSG-221P-NECTR24R' : 'PowerEdge R760';
+
+      // Storage sizing
+      let drr = storageVendor === 'Dell' ? 4.0 : 1.0;
+      let driveSize = 7.68;
+      let drivesCount = Math.max(Math.ceil((storageTb / drr * 1.25) / driveSize), 6);
+
+      // Sizing metrics render
+      const metricsDiv = document.getElementById('sizingMetrics');
+      metricsDiv.innerHTML = `
+        <p><strong>Compute Sizing:</strong> ${totalNodes}x ${compVendor} ${nodeModel} (${totalNodes * coresPerNode} Cores, ${totalNodes * ramPerNode} GB DDR5) with N+${margin} cluster survivability.</p>
+        <p><strong>Storage Sizing:</strong> ${storageVendor} (${storageTb} TB usable workload capacity, ${drr}:1 DRR applied, ${drivesCount}x ${driveSize}TB NVMe SSDs, dual parity).</p>
+        <p><strong>Networking Sizing:</strong> 2x ${netVendor} 25GbE ToR Leaf switches (MLAG/VLT bonded) + 2x 100GbE Spine switches (3:1 oversubscription ratio).</p>
+        <p><strong>Edge Security:</strong> 2x ${secVendor} Firewall HA Pair with SSL/TLS Deep Packet Inspection.</p>
+        <p><strong>Cyber Resilience:</strong> ${resVendor} Cyber Recovery Suite with S3 Object Lock and Hardened Linux Immutability.</p>
+      `;
+
+      // BOM render
+      const bomTbody = document.querySelector('#bomTable tbody');
+      bomTbody.innerHTML = '';
+
+      const items = [
+        { pillar: 'Compute', vendor: compVendor, model: nodeModel, qty: totalNodes, unit: 'Node', desc: `2U Dual Xeon 32-Core, ${ramPerNode}GB DDR5-5600, Dual 25G OCP3, 1+1 PSU` },
+        { pillar: 'Storage', vendor: storageVendor, model: storageVendor === 'Dell' ? 'PowerStore 1200T' : storageVendor + ' Object Array', qty: 1, unit: 'Appliance', desc: `Dual Active Controller, ${drivesCount}x ${driveSize}TB NVMe SSDs, ${drr}:1 DRR Guarantee` },
+        { pillar: 'Networking', vendor: netVendor, model: netVendor === 'Arista' ? '7050SX3-48YC8' : 'PowerSwitch S5248F-ON', qty: 2, unit: 'Switch', desc: '48x 25GbE SFP28, 6x 100GbE QSFP28 ToR Leaf Switch Pair, MLAG HA' },
+        { pillar: 'Networking', vendor: netVendor, model: netVendor === 'Arista' ? '7060CX-32S' : 'PowerSwitch Z9264F-ON', qty: 2, unit: 'Switch', desc: '100GbE QSFP28 Spine Switch Pair, Non-Blocking 3:1 Over-subscription' },
+        { pillar: 'Networking', vendor: netVendor, model: '25GbE SFP28 DAC Cables', qty: totalNodes * 2 + 4, unit: 'Cable', desc: 'Passive Direct Attach Copper Cabling for dual-homed server/storage links' },
+        { pillar: 'Security', vendor: secVendor, model: secVendor === 'Fortinet' ? 'FortiGate 200F' : 'Quantum 6600', qty: 2, unit: 'Appliance', desc: 'NGFW Active-Passive HA Pair with SSL/TLS Inspection' },
+        { pillar: 'Resilience', vendor: resVendor, model: resVendor + ' Resilience Platform', qty: vms + 20, unit: 'License', desc: `Enterprise Immutable Protection (${vms + 20} Instances/Workloads)` }
+      ];
+
+      window._currentBom = items;
+
+      items.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><span class="stat-pill ${item.pillar.toLowerCase()}">${item.pillar}</span></td>
+          <td><strong>${item.vendor}</strong></td>
+          <td>${item.model}</td>
+          <td>${item.qty}</td>
+          <td>${item.unit}</td>
+          <td>${item.desc}</td>
+        `;
+        bomTbody.appendChild(row);
+      });
+    }
+
+    function exportCsv() {
+      if (!window._currentBom) return;
+      let csv = 'Category,Vendor,Part/Model,Quantity,Unit Type,Description\n';
+      window._currentBom.forEach(i => {
+        csv += `"${i.pillar}","${i.vendor}","${i.model}",${i.qty},"${i.unit}","${i.desc}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'solution-bom.csv';
+      a.click();
+    }
+
+    function exportMarkdown() {
+      if (!window._currentBom) return;
+      const envName = document.getElementById('envName').value;
+      let md = '# Enterprise Solution Sizing & BOM Report\n\nProject: ' + envName + '\nDate: ' + new Date().toLocaleDateString() + '\n\n';
+      md += '| Pillar | Vendor | Model | Qty | Description |\n|---|---|---|---|---|\n';
+      window._currentBom.forEach(i => {
+        md += `| ${i.pillar} | ${i.vendor} | ${i.model} | ${i.qty} | ${i.desc} |\n`;
+      });
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'executive-summary.md';
+      a.click();
+    }
+
+    // Initialize on load
+    runCalculation();
+  </script>
+</body>
+</html>

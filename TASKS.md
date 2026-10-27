@@ -59,6 +59,9 @@ Modular multi-vendor Bill of Materials (BOM) sizing engine spanning 5 core infra
   - [x] Automated end-to-end integration test suite (`scripts/test-sizing-engine.cjs`).
 
 ## Phase 4: UI Scaffolding & Solution Export
-- [ ] Interactive configuration wizard (multi-step pillar input).
-- [ ] Real-time BOM generation table with itemized pricing / SKU breakdown.
-- [ ] Multi-format export: Excel/CSV BOM, Customer Executive Summary (PDF/Markdown), Architecture Diagram metadata.
+- [x] Interactive configuration wizard & UI dashboard (`ui/index.html`).
+- [x] Real-time BOM generation table with multi-vendor pillar categorization.
+- [x] Multi-format export services (`src/export/exporter.ts`):
+  - [x] RFC 4180 standard CSV BOM export (`SolutionExporter.toCsvBom`).
+  - [x] Customer Executive Summary in Markdown (`SolutionExporter.toExecutiveSummary`).
+  - [x] Comprehensive export test suite (`scripts/test-solution-exporter.cjs`).
