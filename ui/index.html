@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Solution Builder v2.0</title>
+  <title>Enterprise Solution Builder v2.0 - Guided Architecture Engine</title>
   <style>
     :root {
-      --bg: #0f172a;
+      --bg: #0b1120;
       --card-bg: #1e293b;
+      --card-active: #334155;
       --border: #334155;
       --accent: #38bdf8;
+      --accent-hover: #0284c7;
       --text: #f8fafc;
       --muted: #94a3b8;
-      --success: #4ade80;
+      --success: #10b981;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       margin: 0;
@@ -31,44 +33,64 @@
     }
     .header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 22px;
       color: var(--accent);
+      letter-spacing: -0.5px;
     }
-    .badge {
-      background: #0369a1;
-      color: #e0f2fe;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 12px;
-      font-weight: 600;
+    .step-indicator {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-    .card {
+    .step-badge {
+      flex: 1;
       background: var(--card-bg);
       border: 1px solid var(--border);
+      padding: 12px 16px;
       border-radius: 8px;
-      padding: 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .card h2 {
+    .step-badge.active {
+      background: #0369a1;
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .step-badge.completed {
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .wizard-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .step-content {
+      display: none;
+    }
+    .step-content.active {
+      display: block;
+    }
+    h2 {
       margin-top: 0;
-      font-size: 18px;
       color: var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
+      font-size: 18px;
     }
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
     label {
       display: block;
       font-size: 13px;
+      font-weight: 500;
       color: var(--muted);
       margin-bottom: 6px;
-      font-weight: 500;
     }
     input, select {
       width: 100%;
@@ -76,7 +98,7 @@
       background: #0f172a;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 12px;
+      padding: 10px 14px;
       border-radius: 6px;
       font-size: 14px;
     }
@@ -84,31 +106,43 @@
       outline: none;
       border-color: var(--accent);
     }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
     .btn {
       background: var(--accent);
-      color: #0f172a;
+      color: #0b1120;
       border: none;
       font-weight: 600;
-      padding: 10px 18px;
+      padding: 10px 20px;
       border-radius: 6px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       font-size: 14px;
+      transition: background 0.15s;
     }
     .btn:hover {
       background: #7dd3fc;
     }
     .btn-secondary {
       background: #334155;
-      color: var(--text);
+      color: #ffffff;
     }
     .btn-secondary:hover {
       background: #475569;
-    }
-    .results-section {
-      grid-column: span 2;
     }
     table {
       width: 100%;
@@ -122,11 +156,11 @@
       font-size: 13px;
     }
     th {
-      background: #1e293b;
+      background: #0f172a;
       color: var(--accent);
     }
     tr:nth-child(even) {
-      background: #131c2e;
+      background: #162032;
     }
     .stat-pill {
       display: inline-block;
@@ -140,10 +174,12 @@
     .stat-pill.networking { background: #92400e; color: #fef3c7; }
     .stat-pill.security { background: #991b1b; color: #fee2e2; }
     .stat-pill.resilience { background: #6b21a8; color: #f3e8ff; }
-    .actions-bar {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
+    code {
+      background: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #38bdf8;
     }
   </style>
 </head>
@@ -151,117 +187,193 @@
   <div class="header">
     <div>
       <h1>Enterprise Solution Builder v2.0</h1>
-      <small style="color: var(--muted);">Modular Multi-Vendor Infrastructure Sizing Engine</small>
+      <small style="color: var(--muted);">Guided Multi-Vendor Architecture & BOM Sizing Engine</small>
     </div>
-    <span class="badge">Phase 4 UI Active</span>
+    <span style="font-size: 12px; background: #0284c7; padding: 4px 10px; border-radius: 9999px;">Channel Quote Grade</span>
   </div>
 
-  <div class="grid">
-    <!-- Workload Inputs Card -->
-    <div class="card">
-      <h2>Workload & Infrastructure Inputs</h2>
-      <div class="form-group">
-        <label>Project / Environment Name</label>
-        <input type="text" id="envName" value="Global Data Center Modernization" />
-      </div>
+  <!-- Wizard Steps Indicator -->
+  <div class="step-indicator">
+    <div class="step-badge active" id="badge-1" onclick="goToStep(1)">1. Project & Scope</div>
+    <div class="step-badge" id="badge-2" onclick="goToStep(2)">2. Workload Sizing</div>
+    <div class="step-badge" id="badge-3" onclick="goToStep(3)">3. Vendor Architecture</div>
+    <div class="step-badge" id="badge-4" onclick="goToStep(4)">4. Term & Support SLA</div>
+    <div class="step-badge" id="badge-5" onclick="goToStep(5)">5. Distributor BOM</div>
+  </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+  <div class="wizard-card">
+    <!-- Step 1: Project Scope -->
+    <div class="step-content active" id="step-1">
+      <h2>Step 1: Project Scope & General Parameters</h2>
+      <div class="form-group">
+        <label>Customer / Opportunity Name</label>
+        <input type="text" id="envName" value="Enterprise DC Modernization" />
+      </div>
+      <div class="form-group">
+        <label>Primary Workload Profile</label>
+        <select id="workloadProfile">
+          <option value="Virtualization">Virtualization & Private Cloud (VMware / Nutanix / Hyper-V)</option>
+          <option value="HighIOPS">Mission-Critical Databases (Oracle / SQL Server NVMe-oF)</option>
+          <option value="CyberResilience">Cyber Recovery & Ransomware-Proof Repository</option>
+        </select>
+      </div>
+      <div class="nav-buttons">
+        <div></div>
+        <button class="btn" onclick="nextStep(2)">Proceed to Workload Sizing &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Workload Sizing -->
+    <div class="step-content" id="step-2">
+      <h2>Step 2: Capacity & Performance Requirements</h2>
+      <div class="grid-2">
         <div class="form-group">
-          <label>Total Virtual Machines</label>
+          <label>Total Virtual Machines (VMs)</label>
           <input type="number" id="vms" value="150" />
         </div>
         <div class="form-group">
-          <label>vCPU:pCPU Ratio</label>
+          <label>vCPU:pCPU Target Ratio</label>
           <input type="number" id="vcpuRatio" step="0.5" value="3.0" />
         </div>
       </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="grid-2">
         <div class="form-group">
-          <label>Compute Vendor</label>
-          <select id="computeVendor">
-            <option value="Dell" selected>Dell PowerEdge 16G (R760)</option>
-            <option value="Supermicro">Supermicro SuperServer (221P)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Survivability Margin</label>
-          <select id="survivability">
-            <option value="1" selected>N+1 Redundancy</option>
-            <option value="2">N+2 High Redundancy</option>
-          </select>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-        <div class="form-group">
-          <label>Workload Usable Storage (TB)</label>
+          <label>Usable Workload Storage Capacity (TB)</label>
           <input type="number" id="storageTb" value="120" />
         </div>
         <div class="form-group">
-          <label>Storage Platform</label>
+          <label>N+X Cluster Survivability Margin</label>
+          <select id="survivability">
+            <option value="1" selected>N+1 Node Failover Tolerance</option>
+            <option value="2">N+2 High Availability Fault Tolerance</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Peak Network Ingress/Egress (Gbps)</label>
+          <input type="number" id="peakBw" step="0.5" value="2.5" />
+        </div>
+        <div class="form-group">
+          <label>Physical Windows/Linux Servers to Protect</label>
+          <input type="number" id="physicalServers" value="10" />
+        </div>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevStep(1)">&larr; Back</button>
+        <button class="btn" onclick="nextStep(3)">Proceed to Vendor Pairing &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Vendor Architecture -->
+    <div class="step-content" id="step-3">
+      <h2>Step 3: Multi-Vendor Architecture Pairing</h2>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Compute Hardware Vendor</label>
+          <select id="compVendor">
+            <option value="Dell" selected>Dell PowerEdge 16G (R760 2U)</option>
+            <option value="Supermicro">Supermicro SuperServer (SSG-221P 2U)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Primary / Object Storage Target</label>
           <select id="storageVendor">
-            <option value="Dell" selected>Dell PowerStore (4:1 DRR)</option>
-            <option value="Scality">Scality ARTESCA / RING (S3 WORM)</option>
-            <option value="Wasabi">Wasabi Hot Cloud Storage</option>
-            <option value="PeaSoup">PeaSoup UK Sovereign S3</option>
+            <option value="Dell" selected>Dell PowerStore 1200T (4:1 DRR Guarantee)</option>
+            <option value="Scality">Scality ARTESCA (On-Premises S3 WORM)</option>
+            <option value="Wasabi">Wasabi Hot Cloud Storage ($0 Egress S3)</option>
+            <option value="PeaSoup">PeaSoup UK Sovereign Liquid S3</option>
           </select>
         </div>
       </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="grid-2">
         <div class="form-group">
-          <label>Network Fabric Vendor</label>
-          <select id="networkVendor">
-            <option value="Dell" selected>Dell PowerSwitch S5200/Z9200</option>
-            <option value="Arista">Arista 7050X3 / 7060X</option>
+          <label>Data Centre Networking Fabric</label>
+          <select id="netVendor">
+            <option value="Dell" selected>Dell PowerSwitch S5200/Z9200 (25G/100G)</option>
+            <option value="Arista">Arista Networks 7050X3 / 7060X EOS</option>
           </select>
         </div>
         <div class="form-group">
-          <label>Security NGFW Vendor</label>
+          <label>Edge & Perimeter Firewall</label>
           <select id="secVendor">
-            <option value="Fortinet" selected>Fortinet FortiGate (HA Pair)</option>
-            <option value="Check Point">Check Point Quantum 6600</option>
-            <option value="Sophos">Sophos XGS 2300</option>
+            <option value="Fortinet" selected>Fortinet FortiGate (Active-Passive HA Pair)</option>
+            <option value="Check Point">Check Point Quantum 6600 (ClusterXL)</option>
+            <option value="Sophos">Sophos XGS 2300 (Xstream Architecture)</option>
           </select>
         </div>
       </div>
-
       <div class="form-group">
-        <label>Resilience / Backup Platform</label>
+        <label>Cyber Resilience & Backup Platform</label>
         <select id="resVendor">
-          <option value="Veeam" selected>Veeam Data Platform (VUL Instances)</option>
+          <option value="Veeam" selected>Veeam Data Platform (VUL Universal Licensing)</option>
           <option value="Commvault">Commvault Cloud (Front-End TB)</option>
-          <option value="Cohesity">Cohesity DataProtect</option>
+          <option value="Cohesity">Cohesity DataProtect (SpanFS Immutability)</option>
         </select>
       </div>
-
-      <button class="btn" onclick="runCalculation()">Recalculate Solution BOM</button>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevStep(2)">&larr; Back</button>
+        <button class="btn" onclick="nextStep(4)">Proceed to Term & SLA &rarr;</button>
+      </div>
     </div>
 
-    <!-- Sizing Output Summary Card -->
-    <div class="card">
-      <h2>Architectural Sizing Verdict</h2>
-      <div id="sizingMetrics" style="font-size: 14px; line-height: 1.8;">
+    <!-- Step 4: Term & Support SLA -->
+    <div class="step-content" id="step-4">
+      <h2>Step 4: Subscription Term & Support Level Agreement</h2>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Commitment / Subscription Term</label>
+          <select id="termYears">
+            <option value="1">1 Year Subscription</option>
+            <option value="3" selected>3 Year Upfront Subscription (Recommended)</option>
+            <option value="5">5 Year Long-Term Agreement</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Support SLA Level</label>
+          <select id="supportSla">
+            <option value="Mission_Critical_4Hr_24x7" selected>24x7 4-Hour Mission Critical On-Site</option>
+            <option value="Next_Business_Day">Next Business Day (NBD) Standard</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Veeam Edition Tier (if Veeam selected)</label>
+        <select id="veeamTier">
+          <option value="Premium" selected>Veeam Data Platform Premium (Backup + ONE + Orchestrator)</option>
+          <option value="Advanced">Veeam Data Platform Advanced (Backup + ONE Analytics)</option>
+          <option value="Foundation">Veeam Data Platform Foundation (Backup Core)</option>
+        </select>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn btn-secondary" onclick="prevStep(3)">&larr; Back</button>
+        <button class="btn" onclick="generateBom()">Calculate & Generate Distributor BOM &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Distributor BOM -->
+    <div class="step-content" id="step-5">
+      <h2>Step 5: Verified Distributor Bill of Materials (BOM)</h2>
+      <div id="sizingMetrics" style="background: #0f172a; padding: 16px; border-radius: 8px; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin-bottom: 20px;">
         <!-- Injected via JS -->
       </div>
-      <div class="actions-bar">
-        <button class="btn btn-secondary" onclick="exportCsv()">Export CSV BOM</button>
-        <button class="btn btn-secondary" onclick="exportMarkdown()">Download Executive Summary</button>
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <button class="btn" onclick="downloadCsv()">Download Official CSV BOM</button>
+        <button class="btn btn-secondary" onclick="downloadMarkdown()">Download Customer Summary (MD)</button>
+        <button class="btn btn-secondary" onclick="goToStep(1)">Modify Inputs</button>
       </div>
-    </div>
 
-    <!-- BOM Results Table -->
-    <div class="card results-section">
-      <h2>Consolidated Multi-Vendor Bill of Materials (BOM)</h2>
       <table id="bomTable">
         <thead>
           <tr>
             <th>Pillar</th>
             <th>Vendor</th>
             <th>Part / Model</th>
-            <th>Quantity</th>
+            <th>Order SKU</th>
+            <th>Qty</th>
             <th>Unit</th>
+            <th>Term</th>
+            <th>Support SLA</th>
             <th>Technical Description</th>
           </tr>
         </thead>
@@ -273,26 +385,53 @@
   </div>
 
   <script>
-    function runCalculation() {
+    let currentStep = 1;
+
+    function goToStep(step) {
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.step-badge').forEach(el => el.classList.remove('active'));
+      document.getElementById('step-' + step).classList.add('active');
+      document.getElementById('badge-' + step).classList.add('active');
+      currentStep = step;
+    }
+
+    function nextStep(step) {
+      document.getElementById('badge-' + (step - 1)).classList.add('completed');
+      goToStep(step);
+    }
+
+    function prevStep(step) {
+      goToStep(step);
+    }
+
+    function generateBom() {
+      nextStep(5);
+
+      const envName = document.getElementById('envName').value;
       const vms = parseInt(document.getElementById('vms').value) || 100;
       const vcpuRatio = parseFloat(document.getElementById('vcpuRatio').value) || 3.0;
-      const compVendor = document.getElementById('computeVendor').value;
+      const compVendor = document.getElementById('compVendor').value;
       const margin = parseInt(document.getElementById('survivability').value) || 1;
       const storageTb = parseFloat(document.getElementById('storageTb').value) || 100;
       const storageVendor = document.getElementById('storageVendor').value;
-      const netVendor = document.getElementById('networkVendor').value;
+      const netVendor = document.getElementById('netVendor').value;
       const secVendor = document.getElementById('secVendor').value;
       const resVendor = document.getElementById('resVendor').value;
+      const term = parseInt(document.getElementById('termYears').value) || 3;
+      const sla = document.getElementById('supportSla').value;
+      const veeamTier = document.getElementById('veeamTier').value;
 
       // Compute sizing
       const totalVcpus = vms * 4;
-      const requiredPhysicalCores = Math.ceil(totalVcpus / vcpuRatio);
-      const totalRamGb = vms * 16;
+      const reqPhysicalCores = Math.ceil(totalVcpus / vcpuRatio);
+      const reqRamGb = vms * 16;
       const coresPerNode = 64;
       const ramPerNode = 512;
-      const baseNodes = Math.max(Math.ceil(requiredPhysicalCores / coresPerNode), Math.ceil(totalRamGb / ramPerNode), 2);
+      const baseNodes = Math.max(Math.ceil(reqPhysicalCores / coresPerNode), Math.ceil(reqRamGb / ramPerNode), 2);
       const totalNodes = baseNodes + margin;
-      const nodeModel = compVendor === 'Supermicro' ? 'Supermicro SSG-221P-NECTR24R' : 'PowerEdge R760';
+      const isDellComp = compVendor === 'Dell';
+      const compSku = isDellComp ? '210-BDFY' : 'SYS-221P-NECTR24R';
+      const compModel = isDellComp ? 'Dell PowerEdge R760' : 'Supermicro SSG-221P-NECTR24R';
 
       // Storage sizing
       let drr = storageVendor === 'Dell' ? 4.0 : 1.0;
@@ -300,77 +439,165 @@
       let drivesCount = Math.max(Math.ceil((storageTb / drr * 1.25) / driveSize), 6);
 
       // Sizing metrics render
-      const metricsDiv = document.getElementById('sizingMetrics');
-      metricsDiv.innerHTML = `
-        <p><strong>Compute Sizing:</strong> ${totalNodes}x ${compVendor} ${nodeModel} (${totalNodes * coresPerNode} Cores, ${totalNodes * ramPerNode} GB DDR5) with N+${margin} cluster survivability.</p>
-        <p><strong>Storage Sizing:</strong> ${storageVendor} (${storageTb} TB usable workload capacity, ${drr}:1 DRR applied, ${drivesCount}x ${driveSize}TB NVMe SSDs, dual parity).</p>
-        <p><strong>Networking Sizing:</strong> 2x ${netVendor} 25GbE ToR Leaf switches (MLAG/VLT bonded) + 2x 100GbE Spine switches (3:1 oversubscription ratio).</p>
-        <p><strong>Edge Security:</strong> 2x ${secVendor} Firewall HA Pair with SSL/TLS Deep Packet Inspection.</p>
-        <p><strong>Cyber Resilience:</strong> ${resVendor} Cyber Recovery Suite with S3 Object Lock and Hardened Linux Immutability.</p>
+      document.getElementById('sizingMetrics').innerHTML = `
+        <strong>Architecture Sizing Verdict for ${envName}:</strong><br>
+        &bull; <strong>Compute Cluster:</strong> ${totalNodes}x ${compModel} (${totalNodes * coresPerNode} Cores, ${totalNodes * ramPerNode}GB DDR5) maintaining N+${margin} survivability reserve.<br>
+        &bull; <strong>Storage Architecture:</strong> ${storageVendor} sizing for ${storageTb}TB usable capacity with ${drr}:1 DRR (${drivesCount}x ${driveSize}TB NVMe SSDs).<br>
+        &bull; <strong>Network Fabric:</strong> 2x 25GbE ToR Leaf switches + 2x 100GbE Spine switches (3:1 oversubscription ratio).<br>
+        &bull; <strong>Perimeter Security:</strong> 2x ${secVendor} Firewall HA Clustering with SSL/TLS Inspection.<br>
+        &bull; <strong>Resilience:</strong> ${resVendor} ${veeamTier} immutable protection for ${vms} VMs and ${document.getElementById('physicalServers').value} physical servers.
       `;
 
-      // BOM render
-      const bomTbody = document.querySelector('#bomTable tbody');
-      bomTbody.innerHTML = '';
+      // Build BOM items
+      const items = [];
 
-      const items = [
-        { pillar: 'Compute', vendor: compVendor, model: nodeModel, qty: totalNodes, unit: 'Node', desc: `2U Dual Xeon 32-Core, ${ramPerNode}GB DDR5-5600, Dual 25G OCP3, 1+1 PSU` },
-        { pillar: 'Storage', vendor: storageVendor, model: storageVendor === 'Dell' ? 'PowerStore 1200T' : storageVendor + ' Object Array', qty: 1, unit: 'Appliance', desc: `Dual Active Controller, ${drivesCount}x ${driveSize}TB NVMe SSDs, ${drr}:1 DRR Guarantee` },
-        { pillar: 'Networking', vendor: netVendor, model: netVendor === 'Arista' ? '7050SX3-48YC8' : 'PowerSwitch S5248F-ON', qty: 2, unit: 'Switch', desc: '48x 25GbE SFP28, 6x 100GbE QSFP28 ToR Leaf Switch Pair, MLAG HA' },
-        { pillar: 'Networking', vendor: netVendor, model: netVendor === 'Arista' ? '7060CX-32S' : 'PowerSwitch Z9264F-ON', qty: 2, unit: 'Switch', desc: '100GbE QSFP28 Spine Switch Pair, Non-Blocking 3:1 Over-subscription' },
-        { pillar: 'Networking', vendor: netVendor, model: '25GbE SFP28 DAC Cables', qty: totalNodes * 2 + 4, unit: 'Cable', desc: 'Passive Direct Attach Copper Cabling for dual-homed server/storage links' },
-        { pillar: 'Security', vendor: secVendor, model: secVendor === 'Fortinet' ? 'FortiGate 200F' : 'Quantum 6600', qty: 2, unit: 'Appliance', desc: 'NGFW Active-Passive HA Pair with SSL/TLS Inspection' },
-        { pillar: 'Resilience', vendor: resVendor, model: resVendor + ' Resilience Platform', qty: vms + 20, unit: 'License', desc: `Enterprise Immutable Protection (${vms + 20} Instances/Workloads)` }
-      ];
+      // Compute
+      items.push({
+        pillar: 'Compute', vendor: compVendor, model: compModel, sku: compSku, qty: totalNodes, unit: 'Node', term: term, sla: sla,
+        desc: `2U Rack Server, 2x 32-Core Xeon Gold 6448Y (SKU: 338-CHTT), 512GB DDR5-5600 (SKU: 370-AGVP), BOSS-N1 RAID1, iDRAC9 Datacenter`
+      });
+      if (isDellComp) {
+        items.push({
+          pillar: 'Compute', vendor: 'Dell', model: 'Dell ProSupport Plus Mission Critical', sku: term === 5 ? '865-9803' : '865-9801', qty: totalNodes, unit: 'Service_Pack', term: term, sla: '24x7 4-Hour',
+          desc: `${term}-Year 24x7 4-Hour Mission Critical On-Site Support with Proactive Monitoring`
+        });
+      }
+
+      // Storage
+      if (storageVendor === 'Dell') {
+        items.push({
+          pillar: 'Storage', vendor: 'Dell', model: 'PowerStore 1200T Base Appliance', sku: '210-AXEJ', qty: 1, unit: 'Appliance', term: term, sla: sla,
+          desc: 'Dual Active-Active NVMe Storage Array, 4x 25GbE Optical Mezzanine (SKU: 384-BDZS), Dynamic Resiliency Engine'
+        });
+        items.push({
+          pillar: 'Storage', vendor: 'Dell', model: 'PowerStore 7.68TB NVMe SSD Drive Pack', sku: '400-BLXS', qty: Math.ceil(drivesCount / 6), unit: 'Appliance', term: 'N/A', sla: 'Standard',
+          desc: `${drivesCount}x 7.68TB NVMe SSDs with Dell Future-Proof 4:1 DRR Guarantee`
+        });
+        items.push({
+          pillar: 'Storage', vendor: 'Dell', model: 'Dell ProSupport Plus for PowerStore', sku: term === 5 ? '865-9834' : '865-9832', qty: 1, unit: 'Service_Pack', term: term, sla: '24x7 4-Hour',
+          desc: `${term}-Year 24x7 4-Hour Support with Predictive Storage Analytics`
+        });
+      } else if (storageVendor === 'Scality') {
+        items.push({
+          pillar: 'Storage', vendor: 'Scality', model: 'Scality ARTESCA Software Subscription', sku: term === 3 ? 'ART-LIC-SUB-100T-3Y' : 'ART-LIC-SUB-100T-1Y', qty: Math.ceil(storageTb / 100), unit: 'License', term: term, sla: sla,
+          desc: `${term}-Year S3 Object Storage Subscription (${storageTb} TB), WORM S3 Object Lock, 9+3 Erasure Coding`
+        });
+      } else if (storageVendor === 'Wasabi') {
+        items.push({
+          pillar: 'Storage', vendor: 'Wasabi', model: 'Wasabi Reserved Capacity Storage (RCS)', sku: term === 3 ? 'WASABI-RCS-100T-3Y' : 'WASABI-RCS-25T-1Y', qty: Math.ceil(storageTb / 25), unit: 'TB_Subscription', term: term, sla: '24x7',
+          desc: `${term}-Year Reserved Cloud Object Storage Block (${storageTb} TB), $0 Egress & $0 API Calls`
+        });
+      } else if (storageVendor === 'PeaSoup') {
+        items.push({
+          pillar: 'Storage', vendor: 'PeaSoup', model: 'PeaSoup Sovereign Cloud S3 Repository', sku: 'PS-S3-UK-10T-1Y', qty: Math.ceil(storageTb / 10), unit: 'TB_Subscription', term: term, sla: '24x7',
+          desc: `${term}-Year UK Sovereign S3 Immutable Storage (${storageTb} TB), Zero Egress Fees`
+        });
+      }
+
+      // Networking
+      const isArista = netVendor === 'Arista';
+      items.push({
+        pillar: 'Networking', vendor: netVendor, model: isArista ? 'Arista 7050SX3-48YC8' : 'PowerSwitch S5248F-ON', sku: isArista ? 'DCS-7050SX3-48YC8-F' : '210-ARXQ', qty: 2, unit: 'Switch', term: term, sla: sla,
+        desc: '48x 25GbE SFP28, 6x 100GbE QSFP28 ToR Leaf Switch Pair, Dual AC, MLAG/VLT'
+      });
+      items.push({
+        pillar: 'Networking', vendor: netVendor, model: isArista ? 'Arista 7060CX-32S' : 'PowerSwitch Z9264F-ON', sku: isArista ? 'DCS-7060CX-32S-F' : '210-ARYB', qty: 2, unit: 'Switch', term: term, sla: sla,
+        desc: '100GbE QSFP28 Spine Switch Pair, Non-Blocking Wire-Speed Fabric'
+      });
+      items.push({
+        pillar: 'Networking', vendor: netVendor, model: '25GbE SFP28 Direct Attach Copper (DAC) Cable 3m', sku: isArista ? 'CAB-SFP28-3M' : '470-ACFD', qty: totalNodes * 2 + 4, unit: 'Cable', term: 'N/A', sla: 'Standard',
+        desc: 'Passive 25G DAC cabling for server compute & storage redundant downlinks'
+      });
+
+      // Security
+      let hwSku = secVendor === 'Fortinet' ? 'FG-200F' : (secVendor === 'Check Point' ? 'CPAP-SG6600-SNBT-2Y' : 'XB231CSAA');
+      let bundleSku = secVendor === 'Fortinet' ? (term === 3 ? 'FC-10-00200-950-02-36' : 'FC-10-00200-950-02-12') : (secVendor === 'Check Point' ? 'CPAP-SG6600-SNBC-3Y' : 'XB233ETPA');
+      items.push({
+        pillar: 'Security', vendor: secVendor, model: secVendor === 'Fortinet' ? 'FortiGate 200F' : (secVendor === 'Check Point' ? 'Quantum 6600' : 'Sophos XGS 2300'), sku: hwSku, qty: 2, unit: 'Appliance', term: term, sla: sla,
+        desc: '1U Next-Gen Firewall Appliance (Active-Passive HA Pair with Heartbeat Sync)'
+      });
+      items.push({
+        pillar: 'Security', vendor: secVendor, model: secVendor + ' Unified Threat Protection & Support', sku: bundleSku, qty: 2, unit: 'License', term: term, sla: '24x7 4-Hour',
+        desc: `${term}-Year Unified Threat Protection Subscription with 24x7 4-Hour Enterprise Support`
+      });
+
+      // Resilience
+      if (resVendor === 'Veeam') {
+        const vInstances = vms + parseInt(document.getElementById('physicalServers').value || 10) + Math.ceil(storageTb / 0.5);
+        let vSku = term === 5 ? 'V-VULPRM-0I-SU5YP-00' : (term === 3 ? 'V-VULPRM-0I-SU3YP-00' : 'V-VULPRM-0I-SU1YP-00');
+        if (veeamTier === 'Advanced') vSku = term === 3 ? 'V-VULADV-0I-SU3YP-00' : 'V-VULADV-0I-SU1YP-00';
+        items.push({
+          pillar: 'Resilience', vendor: 'Veeam', model: `Veeam Data Platform ${veeamTier}`, sku: vSku, qty: vInstances, unit: 'License', term: term, sla: '24x7 4-Hour',
+          desc: `${term}-Year VUL Subscription for ${vInstances} Workloads with 24x7 Production Support`
+        });
+      } else if (resVendor === 'Commvault') {
+        const fetb = Math.ceil(vms * 0.1 + 10 * 0.3 + storageTb);
+        items.push({
+          pillar: 'Resilience', vendor: 'Commvault', model: 'Commvault Complete Backup & Recovery Advanced', sku: term === 3 ? 'CV-BR-ADV-1T-3Y' : 'CV-BR-ADV-1T-1Y', qty: fetb, unit: 'License', term: term, sla: '24x7',
+          desc: `${term}-Year Front-End Terabyte Subscription (${fetb} FETB)`
+        });
+      } else if (resVendor === 'Cohesity') {
+        const cohTb = Math.ceil(vms * 0.1 + storageTb);
+        items.push({
+          pillar: 'Resilience', vendor: 'Cohesity', model: 'Cohesity DataProtect Software Subscription', sku: term === 3 ? 'CP-DP-SW-TB-3Y' : 'CP-DP-SW-TB-1Y', qty: cohTb, unit: 'License', term: term, sla: '24x7',
+          desc: `${term}-Year Cohesity SpanFS Capacity Subscription (${cohTb} TB)`
+        });
+      }
 
       window._currentBom = items;
 
-      items.forEach(item => {
+      const tbody = document.querySelector('#bomTable tbody');
+      tbody.innerHTML = '';
+      items.forEach(i => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td><span class="stat-pill ${item.pillar.toLowerCase()}">${item.pillar}</span></td>
-          <td><strong>${item.vendor}</strong></td>
-          <td>${item.model}</td>
-          <td>${item.qty}</td>
-          <td>${item.unit}</td>
-          <td>${item.desc}</td>
+          <td><span class="stat-pill ${i.pillar.toLowerCase()}">${i.pillar}</span></td>
+          <td><strong>${i.vendor}</strong></td>
+          <td>${i.model}</td>
+          <td><code>${i.sku}</code></td>
+          <td><strong>${i.qty}</strong></td>
+          <td>${i.unit}</td>
+          <td>${i.term} Yr</td>
+          <td>${i.sla}</td>
+          <td>${i.desc}</td>
         `;
-        bomTbody.appendChild(row);
+        tbody.appendChild(row);
       });
     }
 
-    function exportCsv() {
+    function downloadCsv() {
       if (!window._currentBom) return;
-      let csv = 'Category,Vendor,Part/Model,Quantity,Unit Type,Description\n';
+      let csv = 'Category,Vendor,Part/Model,Order SKU,Quantity,Unit Type,Term (Years),Support SLA,Description\n';
       window._currentBom.forEach(i => {
-        csv += `"${i.pillar}","${i.vendor}","${i.model}",${i.qty},"${i.unit}","${i.desc}"\n`;
+        csv += `"${i.pillar}","${i.vendor}","${i.model}","${i.sku}",${i.qty},"${i.unit}",${i.term},"${i.sla}","${i.desc}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'solution-bom.csv';
+      a.download = 'distributor-bom-quote.csv';
       a.click();
     }
 
-    function exportMarkdown() {
+    function downloadMarkdown() {
       if (!window._currentBom) return;
       const envName = document.getElementById('envName').value;
-      let md = '# Enterprise Solution Sizing & BOM Report\n\nProject: ' + envName + '\nDate: ' + new Date().toLocaleDateString() + '\n\n';
-      md += '| Pillar | Vendor | Model | Qty | Description |\n|---|---|---|---|---|\n';
+      let md = '# Enterprise Solution Architecture & Distributor BOM Report\n\n';
+      md += '**Project:** ' + envName + '  \n';
+      md += '**Generated Date:** ' + new Date().toLocaleDateString() + '  \n\n---\n\n';
+      md += '## Official Distributor Bill of Materials\n\n';
+      md += '| Pillar | Vendor | Part / Model | Order SKU | Qty | Unit | Term | Support SLA | Technical Description |\n';
+      md += '|---|---|---|---|---|---|---|---|---|\n';
       window._currentBom.forEach(i => {
-        md += `| ${i.pillar} | ${i.vendor} | ${i.model} | ${i.qty} | ${i.desc} |\n`;
+        md += `| ${i.pillar} | ${i.vendor} | ${i.model} | \`${i.sku}\` | ${i.qty} | ${i.unit} | ${i.term} Yr | ${i.sla} | ${i.desc} |\n`;
       });
       const blob = new Blob([md], { type: 'text/markdown' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'executive-summary.md';
+      a.download = 'solution-executive-summary.md';
       a.click();
     }
-
-    // Initialize on load
-    runCalculation();
   </script>
 </body>
 </html>

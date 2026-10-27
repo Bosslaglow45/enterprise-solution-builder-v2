@@ -1,66 +1,70 @@
 /**
- * Sizing Engine Core Types & Models
- * Enterprise Solution Builder v2.0
+ * Sizing Engine Core Types & Models - Enterprise Solution Builder v2.0
  */
 
 export interface WorkloadRequirements {
-  // General
   environmentName: string;
+  contractTermYears: 1 | 3 | 5;
+  supportSla: 'Next_Business_Day' | 'Mission_Critical_4Hr_24x7';
   targetPillars: ('compute' | 'storage' | 'networking' | 'security' | 'resilience')[];
 
-  // 1. Compute & Virtualization
   compute?: {
     totalVms: number;
     avgVcpuPerVm: number;
     avgRamGbPerVm: number;
-    vcpuToPcpuRatio: number; // e.g. 3.0 for 3:1 vCPU:pCPU
-    clusterSurvivabilityMargin: number; // e.g. 1 for N+1, 2 for N+2
-    targetCpuFamily?: 'Intel' | 'AMD';
+    vcpuToPcpuRatio: number;
+    clusterSurvivabilityMargin: number;
     targetChassisVendor?: 'Dell' | 'Supermicro';
-    preferredFormFactor?: '1U' | '2U';
   };
 
-  // 2. Storage
   storage?: {
-    rawRequiredTb: number;
     usableWorkloadCapacityTb: number;
-    dailyChangeRatePercent: number; // e.g. 5%
-    growthRateYearlyPercent: number; // e.g. 15%
-    workloadType: 'Virtualization_General' | 'Database_HighIOPS' | 'Object_Backup' | 'Unstructured_File';
-    storageTier: 'Primary_SAN' | 'OnPrem_Object' | 'Cloud_Offsite';
+    dailyChangeRatePercent: number;
+    growthRateYearlyPercent: number;
+    workloadType: 'Virtualization_General' | 'Database_HighIOPS' | 'Object_Backup';
     targetVendor?: 'Dell' | 'Scality' | 'Wasabi' | 'PeaSoup';
-    expectedDedupeRatio?: number; // e.g. 4.0 for 4:1
+    expectedDedupeRatio?: number;
   };
 
-  // 3. Networking
   networking?: {
     spineLeafFabric: boolean;
-    serverOversubscriptionTargetRatio: number; // e.g. 3.0 for 3:1
-    dualHomedServers: boolean; // MLAG / LACP bonded 25G uplinks
+    serverOversubscriptionTargetRatio: number;
+    dualHomedServers: boolean;
     targetSwitchVendor?: 'Dell' | 'Arista';
   };
 
-  // 4. Security
   security?: {
     peakIngressEgressBandwidthGbps: number;
     deepPacketInspectionSsl: boolean;
     highAvailabilityPair: boolean;
     targetFirewallVendor?: 'Fortinet' | 'Check Point' | 'Sophos';
-    headroomSafetyMarginPercent: number; // e.g. 30% overhead
+    headroomSafetyMarginPercent: number;
   };
 
-  // 5. Cyber Resilience & Backup
   resilience?: {
     protectedVmsCount: number;
     protectedPhysicalServersCount: number;
     protectedNasCapacityTb: number;
-    dailyRetentionDays: number; // e.g. 30 days
-    monthlyRetentionMonths: number; // e.g. 12 months
-    yearlyRetentionYears: number; // e.g. 3 years
+    protectedM365UsersCount?: number;
+    dailyRetentionDays: number;
+    monthlyRetentionMonths: number;
+    yearlyRetentionYears: number;
     immutabilityTarget: 'Local_Hardened_Linux' | 'OnPrem_S3_ObjectLock' | 'Cloud_S3_ObjectLock';
     targetResilienceVendor?: 'Veeam' | 'Commvault' | 'Cohesity';
-    expectedBackupDedupeRatio?: number; // e.g. 2.8:1
+    tierLevel?: 'Foundation' | 'Advanced' | 'Premium';
   };
+}
+
+export interface SolutionBOMItem {
+  category: 'Compute' | 'Storage' | 'Networking' | 'Security' | 'Resilience';
+  partOrModel: string;
+  vendor: string;
+  orderSku: string;
+  quantity: number;
+  description: string;
+  unitType: 'Node' | 'Appliance' | 'Switch' | 'Cable' | 'License' | 'TB_Subscription' | 'Service_Pack';
+  termYears?: number;
+  supportLevel?: string;
 }
 
 export interface ComputeSizingResult {
@@ -68,6 +72,7 @@ export interface ComputeSizingResult {
   requiredTotalRamGb: number;
   recommendedNodesCount: number;
   nodeModel: string;
+  nodeBaseSku: string;
   coresPerNode: number;
   ramGbPerNode: number;
   usableClusterCoresWithNPlusOne: number;
@@ -83,6 +88,7 @@ export interface StorageSizingResult {
   rawCapacityNeededWithParityTb: number;
   recommendedDrivesCount: number;
   driveSizeTb: number;
+  drivePackSku: string;
   parityOverheadRatio: number;
   effectiveDataReductionRatio: number;
   immutabilityCompliant: boolean;
@@ -91,12 +97,16 @@ export interface StorageSizingResult {
 export interface NetworkSizingResult {
   leafSwitchesNeeded: number;
   spineSwitchesNeeded: number;
+  leafSku: string;
+  spineSku: string;
   total25GDownlinkPortsRequired: number;
   total100GUplinkPortsRequired: number;
   achievedOversubscriptionRatio: number;
   cablesRequired: {
     dac25gCount: number;
     dac100gCount: number;
+    dac25gSku: string;
+    dac100gSku: string;
   };
   recommendedLeafModel: string;
   recommendedSpineModel: string;
@@ -104,6 +114,8 @@ export interface NetworkSizingResult {
 
 export interface SecuritySizingResult {
   firewallModel: string;
+  applianceHardwareSku: string;
+  subscriptionBundleSku: string;
   ratedThroughputGbps: number;
   requiredThroughputWithMarginGbps: number;
   inspectionThroughputMarginPercent: number;
@@ -113,8 +125,10 @@ export interface SecuritySizingResult {
 
 export interface ResilienceSizingResult {
   resiliencePlatform: string;
+  editionTier: string;
+  primaryLicenseSku: string;
+  licensedUnitsRequired: number;
   licensingMetric: string;
-  licensedUnitsRequired: number; // e.g. VUL instances or FrontEnd TB
   localBackupRepositorySizeNeededTb: number;
   cloudArchiveSizeNeededTb: number;
   recommendedProxyCpuCores: number;
@@ -122,18 +136,11 @@ export interface ResilienceSizingResult {
   immutabilityMethod: string;
 }
 
-export interface SolutionBOMItem {
-  category: 'Compute' | 'Storage' | 'Networking' | 'Security' | 'Resilience';
-  partOrModel: string;
-  vendor: string;
-  quantity: number;
-  description: string;
-  unitType: 'Node' | 'Appliance' | 'Switch' | 'Cable' | 'License' | 'TB_Subscription';
-}
-
 export interface SizingSolutionOutput {
   environmentName: string;
   timestamp: string;
+  contractTermYears: 1 | 3 | 5;
+  supportSla: string;
   compute?: ComputeSizingResult;
   storage?: StorageSizingResult;
   networking?: NetworkSizingResult;

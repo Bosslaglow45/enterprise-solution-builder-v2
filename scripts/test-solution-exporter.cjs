@@ -61,7 +61,7 @@ console.log('\n=== EXECUTIVE SUMMARY PREVIEW ===');
 console.log(mdOutput.split('\n').slice(0, 18).join('\n'));
 
 // Verify outputs
-if (csvOutput.includes('Dell PowerEdge R760') && mdOutput.includes('Executive Overview')) {
+if (csvOutput.includes('Dell PowerEdge R760') && mdOutput.includes('Executive Summary')) {
   console.log('\n[PASS] SolutionExporter verified successfully for CSV and Markdown formats.');
   process.exit(0);
 } else {
