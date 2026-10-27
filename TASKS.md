@@ -58,7 +58,9 @@ Modular multi-vendor Bill of Materials (BOM) sizing engine spanning 5 core infra
   - [x] Multi-vendor SKU and line item aggregation.
   - [x] Automated end-to-end integration test suite (`scripts/test-sizing-engine.cjs`).
 
-## Phase 4: UI Scaffolding & Solution Export
+## Phase 4: UI Scaffolding, Solution Export & Channel Quoting Engine
+- [x] Distributor-grade SKU and licensing dictionary across all 5 pillars (`docs/research/vendor-licensing-and-skus.md`).
+- [x] Cross-validation rules (airflow matching, DAC distance limits, DRE drive minimums, 10-pack VUL rounding).
 - [x] Interactive configuration wizard & UI dashboard (`ui/index.html`).
 - [x] Real-time BOM generation table with multi-vendor pillar categorization.
 - [x] Multi-format export services (`src/export/exporter.ts`):
