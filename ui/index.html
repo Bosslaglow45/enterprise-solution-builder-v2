@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Solution Builder v2.0 - Guided Architecture Engine</title>
+  <title>Enterprise Solution Builder v2.0 - Consultative Architecture & Sizing Engine</title>
   <style>
     :root {
-      --bg: #0b1120;
-      --card-bg: #1e293b;
-      --card-active: #334155;
-      --border: #334155;
+      --bg: #090d16;
+      --card-bg: #151d2f;
+      --card-border: #243048;
       --accent: #38bdf8;
       --accent-hover: #0284c7;
       --text: #f8fafc;
       --muted: #94a3b8;
       --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gold: #fbbf24;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -27,7 +29,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--card-border);
       padding-bottom: 16px;
       margin-bottom: 24px;
     }
@@ -45,8 +47,8 @@
     .step-badge {
       flex: 1;
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 12px 16px;
+      border: 1px solid var(--card-border);
+      padding: 12px 14px;
       border-radius: 8px;
       text-align: center;
       font-size: 13px;
@@ -59,6 +61,7 @@
       background: #0369a1;
       color: #ffffff;
       border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
     }
     .step-badge.completed {
       border-color: var(--success);
@@ -66,10 +69,11 @@
     }
     .wizard-card {
       background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
       padding: 28px;
       margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
     .step-content {
       display: none;
@@ -81,6 +85,9 @@
       margin-top: 0;
       color: var(--accent);
       font-size: 18px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
     }
     .form-group {
       margin-bottom: 18px;
@@ -92,17 +99,17 @@
       color: var(--muted);
       margin-bottom: 6px;
     }
-    input, select {
+    input, select, textarea {
       width: 100%;
       box-sizing: border-box;
-      background: #0f172a;
-      border: 1px solid var(--border);
+      background: #0b1120;
+      border: 1px solid var(--card-border);
       color: var(--text);
       padding: 10px 14px;
       border-radius: 6px;
       font-size: 14px;
     }
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
     }
@@ -119,9 +126,9 @@
     .nav-buttons {
       display: flex;
       justify-content: space-between;
-      margin-top: 24px;
-      border-top: 1px solid var(--border);
-      padding-top: 16px;
+      margin-top: 28px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 18px;
     }
     .btn {
       background: var(--accent);
@@ -138,11 +145,18 @@
       background: #7dd3fc;
     }
     .btn-secondary {
-      background: #334155;
+      background: #243048;
       color: #ffffff;
     }
     .btn-secondary:hover {
-      background: #475569;
+      background: #334155;
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: #0b1120;
+    }
+    .btn-gold:hover {
+      background: #fde047;
     }
     table {
       width: 100%;
@@ -150,17 +164,17 @@
       margin-top: 16px;
     }
     th, td {
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-border);
       padding: 10px 14px;
       text-align: left;
       font-size: 13px;
     }
     th {
-      background: #0f172a;
+      background: #0b1120;
       color: var(--accent);
     }
     tr:nth-child(even) {
-      background: #162032;
+      background: #111827;
     }
     .stat-pill {
       display: inline-block;
@@ -175,11 +189,56 @@
     .stat-pill.security { background: #991b1b; color: #fee2e2; }
     .stat-pill.resilience { background: #6b21a8; color: #f3e8ff; }
     code {
-      background: #0f172a;
+      background: #0b1120;
       padding: 2px 6px;
       border-radius: 4px;
       font-family: monospace;
       color: #38bdf8;
+    }
+    .battlecard-box {
+      background: #111a2e;
+      border-left: 4px solid var(--accent);
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 20px;
+    }
+    .landmine-item {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      color: #fca5a5;
+      font-size: 13px;
+    }
+    .hook-item {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      color: #6ee7b7;
+      font-size: 13px;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 8px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 6px 12px;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom: 2px solid var(--accent);
     }
   </style>
 </head>
@@ -187,87 +246,140 @@
   <div class="header">
     <div>
       <h1>Enterprise Solution Builder v2.0</h1>
-      <small style="color: var(--muted);">Guided Multi-Vendor Architecture & BOM Sizing Engine</small>
+      <small style="color: var(--muted);">Consultative Sales Engineering & Quote-Grade Distributor Engine</small>
     </div>
-    <span style="font-size: 12px; background: #0284c7; padding: 4px 10px; border-radius: 9999px;">Channel Quote Grade</span>
+    <span style="font-size: 12px; background: #0369a1; padding: 4px 12px; border-radius: 9999px; font-weight: 600;">v2.0 Channel Grade</span>
   </div>
 
   <!-- Wizard Steps Indicator -->
   <div class="step-indicator">
-    <div class="step-badge active" id="badge-1" onclick="goToStep(1)">1. Project & Scope</div>
-    <div class="step-badge" id="badge-2" onclick="goToStep(2)">2. Workload Sizing</div>
-    <div class="step-badge" id="badge-3" onclick="goToStep(3)">3. Vendor Architecture</div>
+    <div class="step-badge active" id="badge-1" onclick="goToStep(1)">1. Deal & Competitive Context</div>
+    <div class="step-badge" id="badge-2" onclick="goToStep(2)">2. Workload Discovery</div>
+    <div class="step-badge" id="badge-3" onclick="goToStep(3)">3. Architecture & Battlecard</div>
     <div class="step-badge" id="badge-4" onclick="goToStep(4)">4. Term & Support SLA</div>
-    <div class="step-badge" id="badge-5" onclick="goToStep(5)">5. Distributor BOM</div>
+    <div class="step-badge" id="badge-5" onclick="goToStep(5)">5. Distributor BOM & Pitch Pack</div>
   </div>
 
   <div class="wizard-card">
-    <!-- Step 1: Project Scope -->
+    <!-- Step 1: Deal & Competitive Context -->
     <div class="step-content active" id="step-1">
-      <h2>Step 1: Project Scope & General Parameters</h2>
-      <div class="form-group">
-        <label>Customer / Opportunity Name</label>
-        <input type="text" id="envName" value="Enterprise DC Modernization" />
+      <h2>Step 1: Partner, Customer & Competitive Deal Context</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-top: -10px; margin-bottom: 20px;">
+        Capture the commercial stakeholders and incumbent competition to tailor the solution architecture, pitch deck, and customer proposal email.
+      </p>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Target Partner Account (Who is quoting?)</label>
+          <input type="text" id="partnerName" value="Softcat" placeholder="e.g. Softcat, Computacenter, Bytes, SCC" />
+        </div>
+        <div class="form-group">
+          <label>End-User Customer Name</label>
+          <input type="text" id="customerName" value="Acme Financial Services" placeholder="e.g. Barclays, NHS Trust, Acme Ltd" />
+        </div>
       </div>
-      <div class="form-group">
-        <label>Primary Workload Profile</label>
-        <select id="workloadProfile">
-          <option value="Virtualization">Virtualization & Private Cloud (VMware / Nutanix / Hyper-V)</option>
-          <option value="HighIOPS">Mission-Critical Databases (Oracle / SQL Server NVMe-oF)</option>
-          <option value="CyberResilience">Cyber Recovery & Ransomware-Proof Repository</option>
-        </select>
+
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Customer Industry</label>
+          <select id="customerIndustry">
+            <option value="Financial_Services" selected>Financial Services & Banking</option>
+            <option value="Healthcare_NHS">Healthcare & NHS</option>
+            <option value="Public_Sector">Central / Local Government</option>
+            <option value="Legal_Professional">Legal & Professional Services</option>
+            <option value="Manufacturing">Manufacturing & Supply Chain</option>
+            <option value="Retail">Retail & E-Commerce</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Organization Size</label>
+          <select id="companySize">
+            <option value="Mid_Market_100_500">Mid-Market (100 - 500 Employees)</option>
+            <option value="Enterprise_500_2500" selected>Enterprise (500 - 2,500 Employees)</option>
+            <option value="Large_Enterprise_2500_Plus">Large Enterprise (2,500+ Employees)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Primary Competitor / Incumbent to Displace</label>
+          <select id="primaryCompetitor">
+            <option value="Rubrik" selected>Rubrik (Proprietary Brik Appliance)</option>
+            <option value="Cohesity">Cohesity (SpanFS 3-Node Cluster)</option>
+            <option value="Dell_PowerProtect">Dell PowerProtect / Data Domain</option>
+            <option value="VMware_Broadcom">VMware by Broadcom (VCF Price Hike)</option>
+            <option value="Palo_Alto">Palo Alto Networks</option>
+            <option value="Commvault">Commvault Complete</option>
+          </select>
+        </div>
       </div>
+
       <div class="nav-buttons">
         <div></div>
-        <button class="btn" onclick="nextStep(2)">Proceed to Workload Sizing &rarr;</button>
+        <button class="btn" onclick="nextStep(2)">Proceed to Workload Discovery &rarr;</button>
       </div>
     </div>
 
-    <!-- Step 2: Workload Sizing -->
+    <!-- Step 2: Workload Discovery -->
     <div class="step-content" id="step-2">
-      <h2>Step 2: Capacity & Performance Requirements</h2>
+      <h2>Step 2: Capacity & Performance Discovery</h2>
+      <p style="color: var(--muted); font-size: 13px; margin-top: -10px; margin-bottom: 20px;">
+        Define the compute, capacity, and network volumes to feed the mathematical sizing calculators.
+      </p>
+
       <div class="grid-2">
         <div class="form-group">
           <label>Total Virtual Machines (VMs)</label>
           <input type="number" id="vms" value="150" />
         </div>
         <div class="form-group">
-          <label>vCPU:pCPU Target Ratio</label>
+          <label>vCPU:pCPU Target Ratio (e.g. 3:1 for General, 2:1 for High Performance)</label>
           <input type="number" id="vcpuRatio" step="0.5" value="3.0" />
         </div>
       </div>
+
       <div class="grid-2">
         <div class="form-group">
           <label>Usable Workload Storage Capacity (TB)</label>
           <input type="number" id="storageTb" value="120" />
         </div>
         <div class="form-group">
-          <label>N+X Cluster Survivability Margin</label>
+          <label>Cluster Survivability Redundancy</label>
           <select id="survivability">
             <option value="1" selected>N+1 Node Failover Tolerance</option>
             <option value="2">N+2 High Availability Fault Tolerance</option>
           </select>
         </div>
       </div>
-      <div class="grid-2">
+
+      <div class="grid-3">
         <div class="form-group">
           <label>Peak Network Ingress/Egress (Gbps)</label>
           <input type="number" id="peakBw" step="0.5" value="2.5" />
         </div>
         <div class="form-group">
-          <label>Physical Windows/Linux Servers to Protect</label>
+          <label>Physical Servers to Protect</label>
           <input type="number" id="physicalServers" value="10" />
         </div>
+        <div class="form-group">
+          <label>Microsoft 365 Users to Backup</label>
+          <input type="number" id="m365Users" value="250" />
+        </div>
       </div>
+
       <div class="nav-buttons">
         <button class="btn btn-secondary" onclick="prevStep(1)">&larr; Back</button>
-        <button class="btn" onclick="nextStep(3)">Proceed to Vendor Pairing &rarr;</button>
+        <button class="btn" onclick="nextStep(3)">Proceed to Architecture & Battlecard &rarr;</button>
       </div>
     </div>
 
-    <!-- Step 3: Vendor Architecture -->
+    <!-- Step 3: Architecture & Battlecard -->
     <div class="step-content" id="step-3">
-      <h2>Step 3: Multi-Vendor Architecture Pairing</h2>
+      <h2>Step 3: Multi-Vendor Architecture & Competitive Playbook</h2>
+      
+      <!-- Dynamic Battlecard Box -->
+      <div id="battlecardBox" class="battlecardBox">
+        <!-- Rendered via JS -->
+      </div>
+
       <div class="grid-2">
         <div class="form-group">
           <label>Compute Hardware Vendor</label>
@@ -286,6 +398,7 @@
           </select>
         </div>
       </div>
+
       <div class="grid-2">
         <div class="form-group">
           <label>Data Centre Networking Fabric</label>
@@ -303,6 +416,7 @@
           </select>
         </div>
       </div>
+
       <div class="form-group">
         <label>Cyber Resilience & Backup Platform</label>
         <select id="resVendor">
@@ -311,15 +425,16 @@
           <option value="Cohesity">Cohesity DataProtect (SpanFS Immutability)</option>
         </select>
       </div>
+
       <div class="nav-buttons">
         <button class="btn btn-secondary" onclick="prevStep(2)">&larr; Back</button>
-        <button class="btn" onclick="nextStep(4)">Proceed to Term & SLA &rarr;</button>
+        <button class="btn" onclick="nextStep(4)">Proceed to Term & Support SLA &rarr;</button>
       </div>
     </div>
 
     <!-- Step 4: Term & Support SLA -->
     <div class="step-content" id="step-4">
-      <h2>Step 4: Subscription Term & Support Level Agreement</h2>
+      <h2>Step 4: Subscription Term & Support Level Agreements</h2>
       <div class="grid-2">
         <div class="form-group">
           <label>Commitment / Subscription Term</label>
@@ -347,52 +462,141 @@
       </div>
       <div class="nav-buttons">
         <button class="btn btn-secondary" onclick="prevStep(3)">&larr; Back</button>
-        <button class="btn" onclick="generateBom()">Calculate & Generate Distributor BOM &rarr;</button>
+        <button class="btn btn-gold" onclick="generateBomAndPitch()">Generate Distributor BOM & Partner Pitch Pack &rarr;</button>
       </div>
     </div>
 
-    <!-- Step 5: Distributor BOM -->
+    <!-- Step 5: Distributor BOM & Pitch Pack -->
     <div class="step-content" id="step-5">
-      <h2>Step 5: Verified Distributor Bill of Materials (BOM)</h2>
-      <div id="sizingMetrics" style="background: #0f172a; padding: 16px; border-radius: 8px; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); margin-bottom: 20px;">
-        <!-- Injected via JS -->
-      </div>
-      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-        <button class="btn" onclick="downloadCsv()">Download Official CSV BOM</button>
-        <button class="btn btn-secondary" onclick="downloadMarkdown()">Download Customer Summary (MD)</button>
-        <button class="btn btn-secondary" onclick="goToStep(1)">Modify Inputs</button>
+      <h2>Step 5: Verified Distributor BOM & Customer Proposal Pack</h2>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tab-bom" onclick="switchOutputTab('bom')">1. Official Distributor BOM (SKUs)</button>
+        <button class="tab-btn" id="tab-proposal" onclick="switchOutputTab('proposal')">2. Customer Proposal Email</button>
+        <button class="tab-btn" id="tab-battlecard" onclick="switchOutputTab('battlecard')">3. Competitive Battlecard</button>
       </div>
 
-      <table id="bomTable">
-        <thead>
-          <tr>
-            <th>Pillar</th>
-            <th>Vendor</th>
-            <th>Part / Model</th>
-            <th>Order SKU</th>
-            <th>Qty</th>
-            <th>Unit</th>
-            <th>Term</th>
-            <th>Support SLA</th>
-            <th>Technical Description</th>
-          </tr>
-        </thead>
-        <tbody>
+      <!-- Tab 1: BOM -->
+      <div id="output-bom">
+        <div id="sizingMetrics" style="background: #0b1120; padding: 16px; border-radius: 8px; font-size: 13px; line-height: 1.6; border: 1px solid var(--card-border); margin-bottom: 20px;">
           <!-- Injected via JS -->
-        </tbody>
-      </table>
+        </div>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <button class="btn" onclick="downloadCsv()">Download Official CSV BOM</button>
+          <button class="btn btn-secondary" onclick="downloadExecutiveSummary()">Download Full Architecture MD Report</button>
+          <button class="btn btn-secondary" onclick="goToStep(1)">Modify Sizing</button>
+        </div>
+        <table id="bomTable">
+          <thead>
+            <tr>
+              <th>Pillar</th>
+              <th>Vendor</th>
+              <th>Part / Model</th>
+              <th>Order SKU</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Term</th>
+              <th>Support SLA</th>
+              <th>Technical Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab 2: Customer Proposal Email -->
+      <div id="output-proposal" style="display: none;">
+        <p style="color: var(--muted); font-size: 13px;">Pre-drafted executive email ready to send from the partner to the end customer.</p>
+        <textarea id="proposalEmailText" rows="18" style="font-family: monospace; font-size: 13px; line-height: 1.5;"></textarea>
+        <div style="margin-top: 12px;">
+          <button class="btn" onclick="copyProposalEmail()">Copy Email to Clipboard</button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Competitive Battlecard -->
+      <div id="output-battlecard" style="display: none;">
+        <div id="fullBattlecardContent">
+          <!-- Injected via JS -->
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    let currentStep = 1;
+    const BATTLECARDS = {
+      'Rubrik': {
+        pitch: 'Liberate the customer from closed proprietary backup appliances with an open, zero-egress, enterprise-grade architecture that delivers 40%+ TCO savings.',
+        hooks: [
+          'Hardware Freedom: Deploy on standard enterprise Dell PowerEdge or Supermicro servers with Linux Hardened Repositories.',
+          'Transparent Economics: Pair Veeam with Wasabi or PeaSoup for true $0 egress fees and predictable flat per-TB pricing.',
+          'Multi-Pillar Synergy: Deliver compute, primary SAN, wire-speed networking, and firewall under a single validated architecture.'
+        ],
+        landmines: [
+          'Ask the customer: "What is your contractual exit cost or data egress fee if you ever choose to leave your backup cloud vault?"',
+          'Ask the customer: "When a hardware node fails out of warranty, are you required to buy full proprietary nodes or can you service commodity disks?"'
+        ]
+      },
+      'Cohesity': {
+        pitch: 'Deliver dedicated sub-millisecond primary storage performance alongside decoupled, scalable S3 immutable backup rather than a compromised secondary hybrid.',
+        hooks: [
+          'Right-Sized Deployment: Scality ARTESCA starts from a single server up to PB scale without a mandatory 3-node cluster tax.',
+          'Dedicated Purpose-Built Performance: Separation of primary high-IOPS NVMe flash (PowerStore) from immutable backup tiering.',
+          'Simpler Licensing: Flat instance-based VUL licensing without opaque cluster capacity consumption penalties.'
+        ],
+        landmines: [
+          'Ask: "What is the minimum physical node expansion requirement when you only need to add 20TB of extra capacity?"',
+          'Ask: "How many usable gigabytes of RAM and compute are consumed purely running the cluster\'s SpanFS management overhead?"'
+        ]
+      },
+      'Dell_PowerProtect': {
+        pitch: 'Move from legacy archival dedupe boxes to an active cyber-resilience architecture that guarantees RTO in minutes, not days.',
+        hooks: [
+          'Instant Multi-VM Boot: Direct-to-NVMe flash restore with Dell PowerStore and Veeam Instant VM Recovery.',
+          'Modern Object-First Security: Native S3 Object Lock compliance rather than proprietary DD Retention Lock.',
+          'Unified Multi-Vendor Flexibility: Combine Dell compute and networking with best-of-breed security and cyber resilience.'
+        ],
+        landmines: [
+          'Ask: "In a total ransomware wipeout, how many hours will it take to rehydrate 50TB of data off Data Domain for parallel VM boots?"',
+          'Ask: "Does your retention lock prevent root admin deletion, or does it require manual serial console intervention?"'
+        ]
+      },
+      'VMware_Broadcom': {
+        pitch: 'Protect your enterprise from hypervisor licensing volatility with a hardware and storage foundation designed for hypervisor portability.',
+        hooks: [
+          'Alternative Hypervisor Freedom: Nutanix AHV or Proxmox/KVM supported seamlessly by our Compute and Cyber Resilience engine.',
+          'Hardware Optimization: High-density Dell PowerEdge R760 with 64-core Xeon Gold minimizing per-core software licensing footprints.',
+          'Decoupled SAN/NAS: Dell PowerStore independent scaling avoiding forced vSAN capacity licensing traps.'
+        ],
+        landmines: [
+          'Ask: "What is your projected VMware renewal budget over the next 3 years under the mandatory per-core VCF packaging?"',
+          'Ask: "Are you paying for vSAN capacity licenses on storage that you don\'t even run on vSAN?"'
+        ]
+      },
+      'Palo_Alto': {
+        pitch: 'Achieve enterprise-grade threat prevention and wire-speed SSL inspection with predictable TCO and dedicated ASIC acceleration.',
+        hooks: [
+          'Dedicated Hardware ASICs: Fortinet SOC4/CP9 fast-path processing delivering 3x higher Threat Prevention throughput per dollar.',
+          'Integrated HA at Zero Extra Tax: Active-Passive clustering included natively with simplified state synchronization.',
+          'Complete Fabric Integration: Automated quarantine and threat response linked directly with data centre switches.'
+        ],
+        landmines: [
+          'Ask: "What is the measured real-world throughput of your PA firewall once SSL/TLS decryption is turned on for 100% of user traffic?"',
+          'Ask: "Are all management, logging, and threat intelligence subscriptions bundled or billed as add-on modules?"'
+        ]
+      }
+    };
 
     function goToStep(step) {
       document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.step-badge').forEach(el => el.classList.remove('active'));
       document.getElementById('step-' + step).classList.add('active');
       document.getElementById('badge-' + step).classList.add('active');
-      currentStep = step;
+
+      if (step === 3) {
+        renderBattlecardBox();
+      }
     }
 
     function nextStep(step) {
@@ -404,10 +608,32 @@
       goToStep(step);
     }
 
-    function generateBom() {
+    function renderBattlecardBox() {
+      const comp = document.getElementById('primaryCompetitor').value;
+      const b = BATTLECARDS[comp] || BATTLECARDS['Rubrik'];
+      const box = document.getElementById('battlecardBox');
+      box.innerHTML = `
+        <div style="font-weight: 600; color: var(--gold); margin-bottom: 8px;">TARGET COMPETITOR PLAYBOOK: ${comp.replace(/_/g, ' ').toUpperCase()}</div>
+        <p style="font-size: 13px; line-height: 1.5; margin-bottom: 12px;"><strong>Winning Strategy:</strong> ${b.pitch}</p>
+        <div style="font-size: 12px; font-weight: 600; color: var(--danger); margin-bottom: 6px;">DISPLACEMENT LANDMINES TO DROP:</div>
+        ${b.landmines.map(l => '<div class="landmine-item">&bull; ' + l + '</div>').join('')}
+      `;
+    }
+
+    function switchOutputTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      document.getElementById('output-bom').style.display = tab === 'bom' ? 'block' : 'none';
+      document.getElementById('output-proposal').style.display = tab === 'proposal' ? 'block' : 'none';
+      document.getElementById('output-battlecard').style.display = tab === 'battlecard' ? 'block' : 'none';
+    }
+
+    function generateBomAndPitch() {
       nextStep(5);
 
-      const envName = document.getElementById('envName').value;
+      const partner = document.getElementById('partnerName').value || 'Arrow Partner';
+      const customer = document.getElementById('customerName').value || 'Customer';
+      const competitor = document.getElementById('primaryCompetitor').value;
       const vms = parseInt(document.getElementById('vms').value) || 100;
       const vcpuRatio = parseFloat(document.getElementById('vcpuRatio').value) || 3.0;
       const compVendor = document.getElementById('compVendor').value;
@@ -440,12 +666,12 @@
 
       // Sizing metrics render
       document.getElementById('sizingMetrics').innerHTML = `
-        <strong>Architecture Sizing Verdict for ${envName}:</strong><br>
+        <strong>Architecture Sizing Verdict for ${customer} (${partner}):</strong><br>
         &bull; <strong>Compute Cluster:</strong> ${totalNodes}x ${compModel} (${totalNodes * coresPerNode} Cores, ${totalNodes * ramPerNode}GB DDR5) maintaining N+${margin} survivability reserve.<br>
         &bull; <strong>Storage Architecture:</strong> ${storageVendor} sizing for ${storageTb}TB usable capacity with ${drr}:1 DRR (${drivesCount}x ${driveSize}TB NVMe SSDs).<br>
-        &bull; <strong>Network Fabric:</strong> 2x 25GbE ToR Leaf switches + 2x 100GbE Spine switches (3:1 oversubscription ratio).<br>
+        &bull; <strong>Network Fabric:</strong> 2x 25GbE ToR Leaf switches + 2x 100GbE Spine switches (3:1 non-blocking ratio).<br>
         &bull; <strong>Perimeter Security:</strong> 2x ${secVendor} Firewall HA Clustering with SSL/TLS Inspection.<br>
-        &bull; <strong>Resilience:</strong> ${resVendor} ${veeamTier} immutable protection for ${vms} VMs and ${document.getElementById('physicalServers').value} physical servers.
+        &bull; <strong>Cyber Resilience:</strong> ${resVendor} ${veeamTier} immutable protection for ${vms} VMs and ${document.getElementById('physicalServers').value} physical servers.
       `;
 
       // Build BOM items
@@ -546,6 +772,7 @@
 
       window._currentBom = items;
 
+      // Render BOM table
       const tbody = document.querySelector('#bomTable tbody');
       tbody.innerHTML = '';
       items.forEach(i => {
@@ -563,6 +790,57 @@
         `;
         tbody.appendChild(row);
       });
+
+      // Render Customer Proposal Email
+      const email = `Subject: Technical Proposal & Sizing Verdict: ${customer} Infrastructure Modernization (${partner})
+
+Hi ${customer} Architecture Team,
+
+Following our discovery and architecture review, ${partner} has finalized the formal multi-pillar infrastructure architecture for your modern enterprise environment.
+
+Our objective is to deliver a high-performance, ransomware-proof foundation across compute, storage, wire-speed networking, and cyber recovery while completely avoiding closed proprietary lock-in.
+
+Key Highlights of the Proposed Solution:
+1. Compute & Virtualization: ${totalNodes}x ${compModel} with guaranteed N+${margin} cluster survivability.
+2. Storage & Immutability: ${storageVendor} sizing with ${drr}:1 Data Reduction Ratio and certified S3 Object Lock immutability.
+3. Data Centre Fabric: 2x 25GbE ToR Leaf switches delivering wire-speed non-blocking switching.
+4. Edge Security: 2x ${secVendor} Next-Gen Firewall (Active-Passive HA Pair) with full SSL/TLS inspection.
+5. Cyber Resilience: ${resVendor} ${veeamTier} immutable protection with local hardened WORM repository and cloud offsite archive.
+
+Unlike proprietary architectures that impose closed hardware lock-in and steep renewal penalties, this design provides complete hardware sovereignty, standard enterprise components, and verified manufacturer SKUs backed by 24x7 4-Hour Mission Critical support.
+
+The full itemized distributor Bill of Materials (BOM) and technical sizing breakdown are attached for your commercial review.
+
+We would welcome 20 minutes this week to walk through the technical sizing and answer any architectural questions.
+
+Best regards,
+
+Enterprise Solutions Architecture Team
+${partner} in partnership with Arrow ECS UK`;
+
+      document.getElementById('proposalEmailText').value = email;
+
+      // Render Full Battlecard Tab
+      const b = BATTLECARDS[competitor] || BATTLECARDS['Rubrik'];
+      document.getElementById('fullBattlecardContent').innerHTML = `
+        <div class="battlecard-box">
+          <h3 style="color: var(--gold); margin-top: 0;">Partner Battlecard vs ${competitor.replace(/_/g, ' ')}</h3>
+          <p><strong>Core Value Proposition:</strong> ${b.pitch}</p>
+        </div>
+
+        <h4 style="color: var(--success);">Competitive Displacement Hooks to Lead With:</h4>
+        ${b.hooks.map(h => '<div class="hook-item">&check; ' + h + '</div>').join('')}
+
+        <h4 style="color: var(--danger); margin-top: 20px;">Landmines to Lay in Customer Discovery:</h4>
+        ${b.landmines.map(l => '<div class="landmine-item">&bull; ' + l + '</div>').join('')}
+      `;
+    }
+
+    function copyProposalEmail() {
+      const copyText = document.getElementById('proposalEmailText');
+      copyText.select();
+      document.execCommand('copy');
+      alert('Proposal email copied to clipboard!');
     }
 
     function downloadCsv() {
@@ -579,11 +857,13 @@
       a.click();
     }
 
-    function downloadMarkdown() {
+    function downloadExecutiveSummary() {
       if (!window._currentBom) return;
-      const envName = document.getElementById('envName').value;
+      const partner = document.getElementById('partnerName').value;
+      const customer = document.getElementById('customerName').value;
       let md = '# Enterprise Solution Architecture & Distributor BOM Report\n\n';
-      md += '**Project:** ' + envName + '  \n';
+      md += '**Customer:** ' + customer + '  \n';
+      md += '**Partner:** ' + partner + '  \n';
       md += '**Generated Date:** ' + new Date().toLocaleDateString() + '  \n\n---\n\n';
       md += '## Official Distributor Bill of Materials\n\n';
       md += '| Pillar | Vendor | Part / Model | Order SKU | Qty | Unit | Term | Support SLA | Technical Description |\n';
